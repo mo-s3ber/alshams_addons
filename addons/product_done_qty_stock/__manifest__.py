@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','stock','product'],
+    'depends': ['base','stock','product','inventory_journal_entry_alshams'],
 
     # always loaded
     'data': [
