@@ -1,0 +1,131 @@
+<odoo>
+    <data>
+        <record id="to_force_inventory_analytic_account" model="ir.ui.view">
+            <field name="name">force.inventory.adjustments.cost.form</field>
+            <field name="model">stock.inventory</field>
+            <field name="inherit_id" ref="stock.view_inventory_form"/>
+            <field name="arch" type="xml">
+                <field name="exhausted" position="after">
+                    <field name="analytic_account_id"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                </field>
+                <xpath expr="//field[@name='product_qty']" position="before">
+                    <field name="analytic_account_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_analytic_account_view_form_inherit" model="ir.ui.view">
+            <field name="name">account.analytic.account.inherit</field>
+            <field name="model">account.analytic.account</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='group_id']" position="after">
+                    <field name="operation_id" readonly="0"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="analytic_purchase_view_form_inherit" model="ir.ui.view">
+            <field name="name">purchase.order.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="Analytic_id"/>
+                </xpath>
+
+                <xpath expr="//button[@name='action_view_invoice']" position="after">
+                    <button name="set_analytic_accounts" states="draft" string="Set Analytic account" type="object"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="invoice__view_form_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='move_name']" position="after">
+                    <field name="analytic_id"/>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_subtotal']" position="after">
+                    <field name="inventory_cost"/>
+                    <field name="unit_inventory_cost"/>
+                </xpath>
+
+                <xpath expr="//button[@name='action_invoice_open']" position="after">
+                    <button name="set_analytic_accounts" states="draft,open" string="Set Analytic account"
+                            type="object"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="_bill_view_form_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.inherits</field>
+            <field name="model">account.invoice</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_bank_id']" position="after">
+                    <field name="analytic_id"/>
+                    <field name="origin"/>
+                </xpath>
+
+                <xpath expr="//button[@name='action_invoice_open']" position="after">
+                    <button name="set_analytic_accounts" states="draft,open" string="Set Analytic account"
+                            type="object"/>
+                </xpath>
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='sequence']" position="after">
+                    <field name="line_sequence"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="stock_picking_form_inherit" model="ir.ui.view">
+            <field name="name">stock.picking.inherits</field>
+            <field name="model">stock.picking</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="analytic_id"/>
+                </xpath>
+                <xpath expr="//field[@name='product_uom']" position="after">
+                    <field name="unit_inventory_cost"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="button_cancelg_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.inherits</field>
+            <field name="model">account.move</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="account_cancel.view_move_form_inherit_account_cancel"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_cancel']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="add_unit_inv_cost_return" model="ir.ui.view">
+            <field name="name">add.unit.inv.cost.returns</field>
+            <field name="model">stock.return.picking</field>
+            <field name="inherit_id" ref="stock.view_stock_return_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_return_moves']/tree" position="inside">
+                    <field name="unit_inventory_cost"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

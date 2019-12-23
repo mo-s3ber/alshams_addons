@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report
+            id="action_report_payment_bank"
+            model="account.bank.statement.line"
+            string="Payment Arabic"
+            report_type="qweb-pdf"
+            name="print_button.report_payment_receipt_bank"
+            file="print_button.report_payment_receipt_bank"
+            menu="False"
+    />
+    <record id="view_form_print_button" model="ir.ui.view">
+        <field name="name">Print Button</field>
+        <field name="model">account.bank.statement.line</field>
+        <field name="inherit_id" ref="account.view_bank_statement_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                    <!--<button class="oe_stat_button"-->
+                    <!--icon="gtk-print"-->
+                    <!--string="Print Report"-->
+                    <!--type="object"-->
+                    <!--name="print_report_bank">-->
+                    <!--</button>-->
+                <footer>
+                    <button name="get_report" string="Print" type="object" class="btn-primary"/>
+                </footer>
+
+            </xpath>
+        </field>
+    </record>
+
+    <record id="paperformat_frenchcheck" model="report.paperformat">
+    <field name="name">Bank Check</field>
+    <field name="default" eval="True"/>
+    <field name="format">custom</field>
+    <field name="page_height">80</field>
+    <field name="page_width">175</field>
+    <field name="orientation">Portrait</field>
+    <field name="margin_top">3</field>
+    <field name="margin_bottom">3</field>
+    <field name="margin_left">3</field>
+    <field name="margin_right">3</field>
+    <field name="header_line" eval="False"/>
+    <field name="header_spacing">3</field>
+    <field name="dpi">80</field>
+</record>
+
+</odoo>
+

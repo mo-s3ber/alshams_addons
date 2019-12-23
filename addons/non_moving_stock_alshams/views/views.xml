@@ -1,0 +1,116 @@
+<odoo>
+    <data>
+        <!--<template id="assets_backend" name="project assets" inherit_id="web.assets_backend">-->
+        <!--<xpath expr="." position="inside">-->
+        <!--<script type="text/javascript" src="/non_moving_stock_alshams/static/src/js/task_list.js"></script>-->
+        <!--</xpath>-->
+        <!--</template>-->
+
+        <!--<template id="assets_backend" name="tree view menu" inherit_id="web.assets_backend">-->
+        <!--<xpath expr="." position="inside">-->
+        <!--<script type="text/javascript" src="/non_moving_stock_alshams/static/src/js/tree_view_button.js"></script>-->
+        <!--</xpath>-->
+        <!--</template>-->
+
+
+
+        <record id="qoh_list_view" model="ir.ui.view">
+            <field name="name">QOH</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_move_line_tree"/>
+            <field name="arch" type="xml">
+                <!--<xpath expr="//field[@name='date']" position="before">-->
+                <!--<button string="AAAAAAAAA"/>-->
+                <!--</xpath>-->
+                <xpath expr="//field[@name='qty_done']" position="before">
+                    <field name="QoH"/>
+                    <field name="total_price"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="qoh_form_view" model="ir.ui.view">
+            <field name="name">QOH available</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_move_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='lot_id']" position="after">
+                    <field name="QoH"/>
+                    <field name="total_price"/>
+                    <field name="num_of_movs" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--<record id="button_non_moving_filter_view" model="ir.ui.view">-->
+        <!--<field name="name">Non-moving Products</field>-->
+        <!--<field name="model">stock.move.line</field>-->
+        <!--<field name="inherit_id" ref="stock.view_move_line_form"/>-->
+        <!--<field name="arch" type="xml">-->
+        <!--<xpath expr="//header" position="inside">-->
+        <!--<button name="non_moving_function" type="object" string="Slow / Non-moving Products"-->
+        <!--class="oe_highlight"/>-->
+        <!--</xpath>-->
+        <!--</field>-->
+        <!--</record>-->
+
+
+        <!--<template xml:space="preserve">-->
+        <!--<t t-extend="ListView.buttons">-->
+        <!--<t t-jquery="button.oe_list_add" t-operation="after">-->
+        <!--<button string="AAAAAAA"/>-->
+        <!--</t>-->
+        <!--</t>-->
+        <!--</template>-->
+
+        <record id='custom_filter_moves_wiz_view' model="ir.ui.view">
+            <field name="model">non.moving.wizard</field>
+            <field name="view_type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="date_from"/>
+                                <field name="min_move"/>
+                            </group>
+                            <group>
+                                <field name="date_to"/>
+                                <field name="location_id"/>
+                            </group>
+                        </group>
+
+                        <footer>
+                            <button string="Filter" name="all_filtered_moves" type="object"
+                                    class="btn-primary"/>
+                            <button string="Cancel" class="btn-default" special="cancel"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_open_wizard_moves" model="ir.actions.act_window">
+            <field name="name">Non-moving Stock</field>
+            <field name="res_model">non.moving.wizard</field>
+            <field name="view_type">form</field>
+            <field name="target">new</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="custom_filter_moves_wiz_view"/>
+        </record>
+
+        <!--<record id="button_non_moving_filter_view" model="ir.ui.view">-->
+        <!--<field name="name">Non-moving Products</field>-->
+        <!--<field name="model">stock.move.line</field>-->
+        <!--<field name="inherit_id" ref="stock.view_move_line_tree"/>-->
+        <!--<field name="arch" type="xml">-->
+        <!--<xpath expr="//tree" position="after">-->
+        <!--<button string="AAAAAAA"/>-->
+        <!--</xpath>-->
+        <!--</field>-->
+        <!--</record>-->
+        <menuitem id="menu_product_filter_move" name="Slow / Non-moving Stock" parent="stock.menu_warehouse_report" sequence="114" action="action_open_wizard_moves"/>
+
+
+    </data>
+</odoo>

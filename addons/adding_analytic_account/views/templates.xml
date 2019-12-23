@@ -1,0 +1,90 @@
+<odoo>
+    <data>
+        <template id="assets_backend" inherit_id="web.assets_backend" name="adding_analytic_account">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/adding_analytic_account/static/src/js/widget.js"></script>
+            </xpath>
+        </template>
+        <record id="view_account_journal_form" model="ir.ui.view">
+            <field name="name">account.tax.inherit.form</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='refund_account_id']" position="after">
+                    <field name="include_in_inventory_cost"/>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="tax_type"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_inventory_cost_form" model="ir.ui.view">
+            <field name="name">purchase.order.inherit.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
+                    <field name="inventory_cost"/>
+                    <field name="unit_inventory_cost" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.account</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="110"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block">
+                        <h2>Financial Procurement Report</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane"
+                                     style="border-right: 1px solid #bbbbbb;border-left:none;">
+                                    <div class="content-group" dir="rtl">
+                                        <div class="row mt16">
+                                            <label string="الدفعات" for="payments" class="col-lg-3 o_light_label"/>
+                                            <field name="payments" readonly="0"
+                                                   domain="[('company_id', '=', company_id)]"/>
+                                        </div>
+                                        <div class="row mt16">
+                                            <label string="رصيد التامين المحجوز" for="reserved_insurance"
+                                                   class="col-lg-3 o_light_label"/>
+                                            <field name="reserved_insurance" readonly="0"
+                                                   domain="[('company_id', '=', company_id)]"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane"
+                                     style="border-right: 1px solid #bbbbbb;border-left:none;">
+                                    <div class="content-group" dir="rtl">
+                                        <div class="row mt16">
+                                            <label string="الدفعة المقدمة" for="advance_payment"
+                                                   class="col-lg-3 o_light_label"/>
+                                            <field name="advance_payment" readonly="0"
+                                                   domain="[('company_id', '=', company_id)]"/>
+                                        </div>
+                                        <div class="row">
+                                            <label string="الرصيد المستحق" for="Balance_due"
+                                                   class="col-lg-3 o_light_label"/>
+                                            <field name="Balance_due" readonly="0"
+                                                   domain="[('company_id', '=', company_id)]"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

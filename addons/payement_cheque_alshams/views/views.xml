@@ -1,0 +1,273 @@
+<odoo>
+  <data>
+    <record id="add_payment_account_edit" model="ir.ui.view">
+      <field name="name">Add payment account </field>
+      <field name="model">account.payment</field>
+      <field name="inherit_id" ref="account.view_account_payment_invoice_form"/>
+      <field name="arch" type="xml">
+        <data>
+          <xpath expr="/form/sheet/group" position="inside" >
+            <group attrs="{'invisible': [('name_of_journal', '!=', 'Cheque')]}">
+                <field name="cheque_hash" />
+                <field name="name_of_journal" invisible="1" />
+                <field name="cheque_date" />
+                <field name="account" widget="selection"/>
+            </group>
+          </xpath>
+        </data>
+      </field>
+    </record>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+    <field name="name">res.accounting.config.settings.view.form.inherit.custom.sale</field>
+    <field name="model">res.config.settings</field>
+    <field name="priority" eval="10"/>
+    <field name="inherit_id" ref="account.res_config_settings_view_form" />
+    <field name="arch" type="xml">
+            <xpath expr="//field[@name='has_accounting_entries']" position="before">
+                <h2>Cheques Accounts</h2>
+                <group>
+                    <group>
+                        <h3>Cheques in</h3>
+                        <field name="rec_account_1" invisible="1"/>
+                        <field name="rec_account_2" invisible="1"/>
+                        <field name="intermediate_account"/>
+                        <field name="transfer_account"/>
+                    </group>
+                    <group>
+                        <h3>Cheques out</h3>
+                        <field name="pay_debit_setting" string="Pay Debit" invisible="1"/>
+                        <field name="pay_credit_setting" string="Pay Credit" invisible="1"/>
+                        <field name="intermediate_account_out" string="Pay intermediate account"/>
+                        <field name="transfer_account_out" string="Close account" invisible="1"/>
+                    </group>
+                </group>
+                <group>
+                    <group>
+                        <field name="cheque_draft_journal_id"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    <record id="cheques_journal_entry_tree_action" model="ir.actions.act_window">
+      <field name="name">New Journal entry</field>
+      <field name="res_model">account.move</field>
+      <field name="domain">[('journal_parent', '=', active_id)]</field>
+    </record>
+    <record id="cheques_matching_payments_tree_action" model="ir.actions.act_window">
+      <field name="name">New matching payements</field>
+      <field name="res_model">account.payment</field>
+      <field name="domain">[('batch_payment_id', '=', active_id)]</field>
+    </record>
+
+    <record id="cheque_batch_view" model="ir.ui.view">
+      <field name="name">Add payment account </field>
+      <field name="model">account.batch.payment</field>
+      <field name="inherit_id" ref="account_batch_payment.view_batch_payment_form"/>
+      <field name="arch" type="xml">
+          <!--<xpath expr="//field[@name=''"-->
+          <xpath expr="//sheet//group" position="before">
+              <div class="oe_button_box" name="button_box">
+                  <button class="btn btn-sm oe_stat_button"
+                    icon="fa-pencil-square-o"
+                    name="%(cheques_journal_entry_tree_action)d" type="action">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                           <field name="journal_entry_number"/>
+                        </span>
+                      <span class="o_stat_text">Journal entries(s)</span>
+                    </div>
+                   </button>
+                  <button class="btn btn-sm oe_stat_button"
+                    icon="fa-pencil-square-o"
+                    name="%(cheques_matching_payments_tree_action)d" type="action">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                           <field name="payements_number"/>
+                        </span>
+                      <span class="o_stat_text">Matching Payment(s)</span>
+                    </div>
+                   </button>
+
+              </div>
+          </xpath>
+          <!--<xpath expr="//field[@name='move_name']" position = "attributes">-->
+              <!--<attribute name="invisible">1</attribute>-->
+          <!--</xpath>-->
+            <xpath expr="//field[@name='journal_id']" position="replace" >
+                <field name="journal_id" domain="[('type', '=', 'bank')]" attrs="{'required': [('state_in', '!=', 'draft')], 'readonly':[('state_in','=','draft'),('cheque_type','=','in')]}"  options="{'no_create': True, 'no_create_edit':True}" />
+
+                <!--<attribute name="attrs">{'required': [('state_in', '!=', 'draft')]}</attribute>-->
+                <!--<attribute name="domain">[('type', '=', 'bank'),('company_id','=',1)]</attribute>-->
+            </xpath>
+            <xpath expr="//field[@name='date']" position="attributes" >
+                <attribute name="attrs">{'required': [('state_in', '!=', 'draft')]}</attribute>
+            </xpath>
+
+          <xpath expr="//button[@name='print_batch_payment']" position="after" >
+            <button name="recieve" class="oe_highlight" string="Receive" type="object"  attrs="{'invisible': ['|',('state_in', '!=', 'draft'),('cheque_type', '!=', 'in')]}"  />
+            <button name="transfer_collect" class="oe_highlight" string="Transfer to bank" type="object" attrs="{'invisible': ['|',('state_in', '!=', 'cheques_in_safe'),('cheque_type', '!=', 'in')]}" />
+            <button name="transfer_collect" class="oe_highlight" string="Collect" type="object" attrs="{'invisible': ['|',('state_in', 'not in', ['cheques_under_collection']),('cheque_type', '!=', 'in')]}" />
+
+            <button name="reject" class="oe_highlight" string="Reject" type="object" attrs="{'invisible': ['|',('state_in', '!=', 'cheques_under_collection'),('cheque_type', '!=', 'in')]}"  />
+            <button name="pay_close" type="object" string="Pay" class="oe_highlight" attrs="{'invisible': ['|',('state_out', '!=', 'draft'),('cheque_type', '!=', 'out')]}" />
+            <button name="make_close" type="object" string="close" class="oe_highlight" attrs="{'invisible': ['|',('state_out', '!=', 'to_pay'),('cheque_type', '!=', 'out')]}" />
+
+            <field name="state_in" widget="statusbar" attrs="{'invisible': [('cheque_type', '!=', 'in')]}" />
+            <field name="state_out" widget="statusbar" attrs="{'invisible': [('cheque_type', '!=', 'out')]}"/>
+          </xpath>
+
+          <xpath expr="//field[@name='date']" position="after" >
+              <field name="maturity_date" />
+          </xpath>
+          <xpath expr="//field[@name='journal_id']" position="after" >
+              <field name="cheque_number" />
+                <field name="account_2" invisible="True"/>
+                <field name="rec_account_1" invisible="True" />
+                <field name="rec_account_2" invisible="True" />
+
+                <field name='current_state_of_cheque' invisible="True"/>
+                <field name="cheque_type" attrs="{'required': [('state_in', '!=', 'draft')],'readonly':['|',('state_in','!=','draft'),('state_out','!=','draft')]}"/>
+                <field name="partner_id" />
+          </xpath>
+
+
+
+          <!--<xpath expr="/form/sheet/group" position="inside" >-->
+            <!--<group>-->
+                <!--<field name="cheque_number" />-->
+                <!--<field name="account_2" invisible="True"/>-->
+                <!--<field name="rec_account_1" invisible="True" />-->
+                <!--<field name="rec_account_2" invisible="True" />-->
+
+                <!--<field name='current_state_of_cheque' invisible="True"/>-->
+                <!--<field name="cheque_type" attrs="{'required': [('state_in', '!=', 'draft')],'readonly':['|',('state_in','!=','draft'),('state_out','!=','draft')]}"/>-->
+                <!--<field name="partner_id" />-->
+
+            <!--</group>-->
+          <!--</xpath>-->
+
+          <xpath expr="//field[@name='state']" position="attributes" >
+             <attribute name="attrs">{'invisible': True}</attribute>
+          </xpath>
+      </field>
+    </record>
+
+    <record id="batch_view_tree" model="ir.ui.view">
+      <field name="name">Cheques</field>
+      <field name="model">account.batch.payment</field>
+      <field name="inherit_id" ref="account_batch_payment.view_batch_payment_tree"/>
+      <field name="arch" type="xml">
+          <xpath expr="//field[@name='amount']" position="replace">
+            <field name="amount" sum="Total" />
+          </xpath>
+          <xpath expr="//field[@name='state']" position="after" >
+                <field name="cheque_number" />
+                <field name="account_2"/>
+                <field name="maturity_date" />
+                <field name='current_state_of_cheque' />
+                <field name="cheque_type" />
+                <field name="partner_id" />
+          </xpath>
+          <xpath expr="//field[@name='state']" position="replace" >
+            <field name="state" invisible="True"/>
+             <!-- <attribute name="attrs">{'invisible': "True"}</attribute> -->
+          </xpath>
+      </field>
+    </record>
+
+<!--    <record id="tree_search_view" model="ir.ui.view">-->
+<!--      <field name="name">tree search</field>-->
+<!--      <field name="model">account.batch.payment</field>-->
+<!--      <field name="inherit_id" ref="account_batch_payment.view_batch_payment_search"/>-->
+<!--      <field name="arch" type="xml">-->
+<!--          <group position="inside" >-->
+<!--              <filter string="State Of Cheque in" icon="terp-partner" context="{'group_by':'state_in'}"/>-->
+<!--              <filter string="State Of Cheque out" icon="terp-partner" context="{'group_by':'state_out'}"/>-->
+
+<!--              <filter string="Type Of Cheque" icon="terp-partner" context="{'group_by':'cheque_type'}"/>-->
+<!--              <filter string="Forecast" domain="[('state_of_cheque', '!=','collection'),('state_of_cheque2', '!=','close')]" context="{'group_by': 'maturity_date'}"/>-->
+<!--          </group>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <record id ='cheque_account' model='account.journal'>
+        <field name='name'>Cheque</field>
+        <field name='type'>bank</field>
+        <field name='code'>cheq</field>
+    </record>
+
+
+    <!---->
+              <!-- Payment methods -->
+
+
+      <record id="account_payment_method_cash_in" model="account.payment.method">
+            <field name="name">Cash</field>
+            <field name="code">cash</field>
+            <field name="payment_type">inbound</field>
+        </record>
+
+      <record id="account_payment_method_cash_out" model="account.payment.method">
+            <field name="name">Cash</field>
+            <field name="code">cash</field>
+            <field name="payment_type">outbound</field>
+        </record>
+        <record id="account_payment_method_bank_transefer_in" model="account.payment.method">
+            <field name="name">Bank Transfer</field>
+            <field name="code">banktransfer</field>
+            <field name="payment_type">inbound</field>
+        </record>
+      <record id="account_payment_method_bank_transefer_out" model="account.payment.method">
+            <field name="name">Bank Transfer</field>
+            <field name="code">banktransfer</field>
+            <field name="payment_type">outbound</field>
+        </record>
+      <record id="account_payment_method_cheque_in" model="account.payment.method">
+            <field name="name">Cheque</field>
+            <field name="code">cheque</field>
+            <field name="payment_type">inbound</field>
+        </record>
+      <record id="account_payment_method_cheque_out" model="account.payment.method">
+            <field name="name">Cheque</field>
+            <field name="code">cheque</field>
+            <field name="payment_type">outbound</field>
+        </record>
+      <!-- end -->
+
+   <record model="ir.actions.act_window" id="pruchases_deposit_tree_action">
+    <field name="name">Cheques</field>
+    <field name="res_model">account.batch.payment</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+    <field name="view_id" ref="batch_view_tree"/>
+    <field name="domain">[('cheque_type', '=', 'out')]</field>
+    <field name="context">{'default_cheque_type':'out'}</field>
+  </record>
+  <record model="ir.actions.act_window" id="sales_deposit_tree_action">
+    <field name="name">Cheques</field>
+    <field name="res_model">account.batch.payment</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">form,tree</field>
+    <field name="view_id" ref="batch_view_tree"/>
+    <field name="domain">[('cheque_type', '=', 'in')]</field>
+    <field name="context">{'default_cheque_type':'in'}</field>
+  </record>
+  <record model="ir.actions.act_window" id="report_deposit_tree_action">
+    <field name="name">Cheques</field>
+    <field name="res_model">account.batch.payment</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">form,tree</field>
+    <field name="view_id" ref="batch_view_tree"/>
+  </record>
+  <menuitem action='pruchases_deposit_tree_action' id="menu_product" name="Cheques" parent="account.menu_finance_payables" sequence="9"/>
+   <record model="ir.ui.menu" id="menu_batch_deposit">
+      <field name="name">Cheques</field>
+      <field name="action" ref='sales_deposit_tree_action' />
+    </record>
+
+<!--   <menuitem action='report_deposit_tree_action' id="cheques" name="Cheques" parent="account.menu_finance_reports" sequence="9"/> -->
+
+  </data>
+</odoo>

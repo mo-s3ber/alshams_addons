@@ -1,0 +1,28 @@
+<odoo>
+    <data>
+        <!--<record id="view_order_form_digizilla" model="ir.ui.view">-->
+            <!--<field name="name">view.order.form.digizilla</field>-->
+            <!--<field name="model">sale.order</field>-->
+            <!--<field name="inherit_id" ref="sale.view_order_form"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<xpath expr="//field[@name='partner_id']" postion="after">-->
+                    <!--<field name="partner"/>-->
+                    <!--<field name="is_sale_order"/>-->
+                <!--</xpath>-->
+            <!--</field>-->
+        <!--</record>-->
+
+        <record id="qoh_list_view_digizilla" model="ir.ui.view">
+            <field name="name">QDigizilla</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="partner"/>
+                    <field name="is_sale_order"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo> 

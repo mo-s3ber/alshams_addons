@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="track_am_line_template">
+        <div>
+            <strong>The journal entry has been updated:</strong>
+            <ul>
+                <t t-if="new_analytic_account">
+                    <li>Analytic Account:
+                        <bdi>
+                            <t t-esc="line.analytic_account_id.display_name"/>
+                        </bdi>
+                        -->
+                        <bdi>
+                            <t t-esc="new_analytic_account.display_name"/>
+                        </bdi>
+                    </li>
+                </t>
+                <t t-if="new_account">
+                    <li>Account:
+                        <bdi>
+                            <t t-esc="line.account_id.display_name"/>
+                        </bdi>
+                        -->
+                        <bdi>
+                            <t t-esc="new_account.display_name"/>
+                        </bdi>
+                    </li>
+                </t>
+                <t t-if="new_partner">
+                    <li>Partner:
+                        <bdi>
+                            <t t-esc="line.partner_id.display_name"/>
+                        </bdi>
+                        -->
+                        <bdi>
+                            <t t-esc="new_partner.display_name"/>
+                        </bdi>
+                    </li>
+                </t>
+                <t t-if="new_label">
+                    <li>Label:
+                        <bdi>
+                            <t t-esc="line.name"/>
+                        </bdi>
+                        -->
+                        <bdi>
+                            <t t-esc="new_label"/>
+                        </bdi>
+                    </li>
+                </t>
+                <t t-if="new_debit">
+                    <li>Debit:
+                        <bdi>
+                            <t t-esc="line.debit"/>
+                        </bdi>
+                        -->
+                        <bdi>
+                            <t t-esc="new_debit"/>
+                        </bdi>
+                    </li>
+                </t>
+                <t t-if="new_credit">
+                    <li>Credit:
+                        <bdi>
+                            <t t-esc="line.credit"/>
+                        </bdi>
+                        -->
+                        <bdi>
+                            <t t-esc="new_credit"/>
+                        </bdi>
+                    </li>
+                </t>
+            </ul>
+        </div>
+    </template>
+</odoo>

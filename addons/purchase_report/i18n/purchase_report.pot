@@ -1,0 +1,181 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* purchase_report
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-04-23 14:11+0000\n"
+"PO-Revision-Date: 2019-04-23 14:11+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "0.0"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Adding VAT"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Analytical Account"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Att to:"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Comercial and Industrial TAX deduction"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Conditions:"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Email"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Executive Director"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Fax"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "General Conditions:"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Issue Date:"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Item"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Logo"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "NET"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Number"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Payment Terms:"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Please kindly supply the following items:"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Procurement Department Manager"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Purchase Department"
+msgstr ""
+
+#. module: purchase_report
+#: model:ir.actions.report,name:purchase_report.action_report_purchase_order_new
+msgid "Purchase Order New"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Purchase Order number"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Purchase Request number"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Quantity"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Subtotal"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Supplier:"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Supply Order"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Technical Department"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Technical Sector Director"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Telephone"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Unit Price"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Unit of Measure"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Untaxed Amount"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Work Type"
+msgstr ""

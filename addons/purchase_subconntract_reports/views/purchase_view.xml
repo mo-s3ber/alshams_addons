@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="signature_image_page" model="ir.ui.view">
+            <field name="name">res.users.general.condition</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='messaging']" position="after">
+                    <group string="Signature">
+                    <field name="signature_im"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="general_condition_purchase_page" model="ir.ui.view">
+            <field name="name">purchase.order.general.condition</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='purchase_delivery_invoice']" position="after">
+                    <page string="General Conditions" name="gen_cond">
+                        <field name="general_condition"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="sequence_to_purchase" model="ir.ui.view">
+            <field name="name">purchase.order.special.seq</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
+                    <attribute name="options">{'no_create_edit': True, 'no_quick_create': True}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_rfq_send']" position="after">
+                    <button name="calc_seqe" type="object" string="CALC SEQ"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="before">
+                        <field name="line_sequence" readonly="1"/>
+                        <field name="line_sequence" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+         <record id="pic_source_Doc" model="ir.ui.view">
+            <field name="name">stock.picking.special.seq</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_confirm']" position="after">
+                    <button name="cla_source" type="object" string="CALC Source Doc"/>
+                    <button name="move_inventory_cost" type="object" string="Update Product Cost"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

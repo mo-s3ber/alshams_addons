@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="jornal_entry_reporting"
+                model="account.move"
+                string="قيد يومية"
+                report_type="qweb-pdf"
+                name="purchase_subconntract_reports.jornal_entry_report"
+                attachment_use="False"
+                file="purchase_subconntract_reports.jornal_entry_report"
+        />
+    </data>
+</odoo>

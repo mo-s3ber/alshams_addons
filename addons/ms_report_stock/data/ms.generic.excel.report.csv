@@ -1,0 +1,2 @@
+id,name,code,lock,state,purchase,sale,inventory,accounting,font_name,background_color,query
+ms_report_stock,Stock Report,report_stock,True,Active,False,False,True,False,Georgia,#F1C40F,<p>SELECT (query is on module)</p>

@@ -1,0 +1,11 @@
+<odoo>
+    <data>
+        <menuitem name="Subcontractors" id="menu_subcontractor_root" sequence="101"/>
+        <menuitem name="Subcontractor" id="menu_subcontractor_management" sequence="1"
+                  parent="menu_subcontractor_root"/>
+        <menuitem name="Control" id="menu_subcontractor_control" sequence="1"
+                  parent="menu_subcontractor_root"/>
+
+        <menuitem id="menu_subcontract_config" name="Configuration" parent="menu_subcontractor_root" sequence="100"/>
+    </data>
+</odoo>

@@ -1,0 +1,17 @@
+<odoo>
+  <data>
+    <record id="cheque_config_settings_domain_view_form" model="ir.ui.view">
+        <field name="name">cheque.config.settings.domain.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='intermediate_account']" position="attributes">
+                <attribute name="domain">[('company_id','=',company_id)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='transfer_account']" position="attributes">
+                <attribute name="domain">[('company_id', '=',company_id)]</attribute>
+            </xpath>
+        </field>
+    </record>
+  </data>
+</odoo>

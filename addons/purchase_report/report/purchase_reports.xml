@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                string="أمر توريد"
+                id="action_report_purchase_order_new"
+                model="purchase.order"
+                report_type="qweb-pdf"
+                name="purchase_report.report_purchaseorder_new"
+                file="purchase_report.report_purchaseorder_new"
+                print_report_name="
+                (object.state in ('draft', 'sent') and 'Request for Quotation - %s' % (object.name) or
+                'Purchase Order - %s' % (object.name))"
+        />
+        <record id="action_report_purchase_order_new" model="ir.actions.report">
+            <field name="paperformat_id" ref="purchase_report.paperformat_a4_new"/>
+        </record>
+
+    </data>
+</odoo>

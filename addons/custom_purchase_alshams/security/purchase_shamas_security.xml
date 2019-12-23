@@ -1,0 +1,9 @@
+<odoo>
+    <data>
+        <record id="group_purchase_approval_alshanas" model="res.groups">
+            <field name="name">Purchase RFQ approval</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <!--<field name="category_id" ref="base.module_category_purchase_management"/>-->
+        </record>
+    </data>
+</odoo>

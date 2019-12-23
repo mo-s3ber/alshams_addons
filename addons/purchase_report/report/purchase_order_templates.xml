@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="internal_layout">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+            <t t-raw="0"/>
+        </div>
+    </template>
+
+    <template id="report_purchaseorder_document_new">
+        <t t-call="purchase_report.internal_layout">
+            <style>
+                table {
+                width: 100%;
+                }
+                table td, table th {
+                border: 1px solid black;
+                padding: 1px;
+                }
+                table.middle tr td:first-child,
+                table.middle tr th:first-child {
+                border-left: none !important;
+                }
+                table.middle tr td:last-child,
+                table.middle tr th:last-child {
+                border-right: none !important;
+                }
+            </style>
+            <div class="page">
+                <div class="oe_structure"/>
+                <div class="container-fluid border border-dark p-0">
+                    <div style="margin:12px;">
+                        <table>
+                            <tbody>
+                                <tr class="text-center">
+                                    <td colspan="5">
+                                        <t t-esc="o.name"/>أمر توريد
+                                    </td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td rowspan="2">
+                                        <t t-esc="o.date_order"/>
+                                    </td>
+                                    <td rowspan="2">تاريخ الاصدار:</td>
+                                    <td>
+                                        <t t-esc="o.name"/>
+                                    </td>
+                                    <td>أمر شراء رقم:</td>
+                                    <td rowspan="6" style="width:163px;height:143px">
+                                        <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)"
+                                             style="width:163px;height:143px"/>
+                                    </td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td></td>
+                                    <td>طلب شراء رقم:</td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td colspan="2">نوع الاعمال:
+                                        <br/>
+                                        <t t-esc="o.x_studio_category"/>
+                                    </td>
+                                    <td colspan="2">المشروع
+                                        <br/>
+                                        <t t-esc="o.Analytic_id.name"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">
+                                        <t t-esc="o.partner_id.mobile"/>
+                                    </td>
+                                    <td class="text-center">التليفون</td>
+                                    <td class="text-right" colspan="2">المورد:</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">
+                                        <t t-esc="o.partner_id.fax"/>
+                                    </td>
+                                    <td class="text-center">الفاكس</td>
+                                    <td class="text-right" colspan="2">
+                                        <t t-esc="o.partner_id.name"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">
+                                        <t t-esc="o.partner_id.email"/>
+                                    </td>
+                                    <td class="text-center">البريد الالكتروني</td>
+                                    <td class="text-right" colspan="2">عناية السيد:
+                                        <t t-esc="o.partner_id.name"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <table class="middle">
+                        <thead>
+                            <tr>
+                                <th class="text-right" colspan="6">برجاء من سيادتكم التكرم بتوريد الاصناف الاتية:</th>
+                            </tr>
+                            <tr class="text-center">
+                                <th>الاجمالي</th>
+                                <th>سعر الوحدة</th>
+                                <th>الكمية</th>
+                                <th>الوحدة</th>
+                                <th>البيان</th>
+                                <th>م</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="counter" t-value="1"/>
+                            <t t-if="'invoice_line_ids' in o.fields_get()">
+                                <t t-value="o.invoice_line_ids" t-set="order_line"/>
+                            </t>
+                            <t t-foreach="o.order_line" t-as="l">
+                                <tr class="text-center">
+                                    <td>
+                                        <t t-esc="l.price_subtotal"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="l.price_unit"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="l.product_qty"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="l.product_uom.name"/>
+                                    </td>
+                                    <td dir="rtl">
+                                        <t t-esc="l.name"/>
+                                    </td>
+                                    <td>
+<!--                                        <t t-if="l.sequence">-->
+<!--                                            <span t-field="l.sequence"/>-->
+<!--                                        </t>-->
+                                        <t>
+                                            <span t-esc="counter"/>
+                                            <t t-set="counter" t-value="counter+1"/>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr class="text-right">
+                                <td>
+                                    <t t-esc="o.amount_untaxed"/>
+                                </td>
+                                <td colspan="5">الاجمالي غير شامل</td>
+                            </tr>
+                            <t t-foreach="o.tax_line_ids" t-as="t">
+                                <tr class="text-right">
+                                    <td>
+                                        <t t-esc="'%.2f'% t.amount"/>
+                                    </td>
+                                    <td colspan="5">
+                                        <t t-esc="t.name"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <!--
+                                                        <tr class="text-right">
+                                                            <td>
+                                                                <t t-esc="o.amount_tax"/>
+                                                            </td>
+                                                            <td colspan="5">خصم ارباح تجارية و صناعية</td>
+                                                        </tr>
+                            -->
+                            <tr class="text-right">
+                                <td>
+                                    <t t-esc="o.amount_total"/>
+                                </td>
+                                <td colspan="5">الصافي</td>
+                            </tr>
+                            <tr class="text-right">
+                                <th colspan="6">الشروط</th>
+                            </tr>
+                            <tr class="text-right">
+                                <td colspan="6">شروط الدفع
+                                    <br/>
+                                    <t t-esc="o.payment_term_id.name"/>
+                                </td>
+                            </tr>
+                            <tr class="text-right">
+                                <td colspan="6">الشروط العامة
+                                    <br/>
+                                    <t t-raw="o.general_condition"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="mt-5" style="margin:2px">
+                        <table class="text-center">
+                            <tbody>
+                                <tr>
+                                    <td>المدير التنفيذي</td>
+                                    <td>مدير القطاع الفني</td>
+                                    <td>مدير ادارة الاحتياجات</td>
+                                    <td>الادارة الفنية</td>
+                                    <td>ادارة المشتريات</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>..........</td>
+                                    <td>..........</td>
+                                    <td>..........</td>
+                                    <td>..........</td>
+                                    <td>..........</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_purchaseorder_new">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="purchase_report.report_purchaseorder_document_new" t-lang="o.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>

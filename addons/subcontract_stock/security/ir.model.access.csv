@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_subcontract_order_stock_worker,subcontract.order,model_subcontract_order,stock.group_stock_user,1,0,0,0
+access_subcontract_order_line_stock_worker,subcontract.order.line,model_subcontract_order_line,stock.group_stock_user,1,0,0,0
+access_stock_location_subcontract_user,stock.location,stock.model_stock_location,subcontract.group_subcontract_user,1,0,0,0
+access_stock_warehouse_subcontract_user,stock.warehouse,stock.model_stock_warehouse,subcontract.group_subcontract_user,1,0,0,0
+access_stock_picking_subcontract_user,stock.picking,stock.model_stock_picking,subcontract.group_subcontract_user,1,1,1,1
+access_stock_move_subcontract_user,stock.move,stock.model_stock_move,subcontract.group_subcontract_user,1,1,1,0
+access_stock_location_subcontract_user_manager,stock.location,stock.model_stock_location,subcontract.group_subcontract_manager,1,0,0,0
+access_stock_warehouse_subcontract_user_manager,stock.warehouse,stock.model_stock_warehouse,subcontract.group_subcontract_manager,1,0,0,0
+access_stock_picking_subcontract_user_manager,stock.picking,stock.model_stock_picking,subcontract.group_subcontract_manager,1,1,1,1
+access_stock_move_subcontract_user_manager,stock.move,stock.model_stock_move,subcontract.group_subcontract_manager,1,1,1,1
+access_stock_location_subcontract_manager,stock.location subcontract manager,stock.model_stock_location,subcontract.group_subcontract_manager,1,0,0,0
+access_stock_warehouse_orderpoint_manager,stock.warehouse.orderpoint,stock.model_stock_warehouse_orderpoint,subcontract.group_subcontract_manager,1,0,0,0
+access_stock_warehouse_orderpoint_user,stock.warehouse.orderpoint,stock.model_stock_warehouse_orderpoint,subcontract.group_subcontract_user,1,0,0,0

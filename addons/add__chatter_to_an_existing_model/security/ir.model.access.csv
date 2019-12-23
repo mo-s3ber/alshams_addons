@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_add__chatter_to_an_existing_model_add__chatter_to_an_existing_model,add__chatter_to_an_existing_model.add__chatter_to_an_existing_model,model_add__chatter_to_an_existing_model_add__chatter_to_an_existing_model,,1,0,0,0

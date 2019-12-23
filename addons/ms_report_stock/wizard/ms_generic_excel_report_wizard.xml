@@ -1,0 +1,73 @@
+<odoo>
+	<data>
+		
+	    <record id="ms_report_stock_form_view_purchase" model="ir.ui.view">
+		    <field name="name">ms.report.stock.form.purchase</field>
+		    <field name="model">ms.generic.excel.report.wizard</field>
+		    <field name="type">form</field>
+		    <field name="inherit_id" ref="ms_generic_excel_report.ms_generic_excel_report_wizard_form_view_purchase"/>
+		    <field name="arch" type="xml">
+		        
+		    	<xpath expr="//form/group" position="after">
+		    		<group string="Stock Report Filter" col="4" attrs="{'invisible': [('code','!=','report_stock')]}">
+		    			<field name="report_stock_location_ids" options="{'no_open':True, 'no_create':True}" widget="many2many_tags"/>
+		    			<field name="report_stock_product_ids" options="{'no_open':True, 'no_create':True}" widget="many2many_tags"/>
+		    		</group>
+		    	</xpath>
+		    	
+		     </field>
+		</record>
+
+		<record id="ms_report_stock_form_view_sale" model="ir.ui.view">
+		    <field name="name">ms.report.stock.form.sale</field>
+		    <field name="model">ms.generic.excel.report.wizard</field>
+		    <field name="type">form</field>
+		    <field name="inherit_id" ref="ms_generic_excel_report.ms_generic_excel_report_wizard_form_view_sale"/>
+		    <field name="arch" type="xml">
+		        
+		    	<xpath expr="//form/group" position="after">
+		    		<group string="Stock Report Filter" col="4" attrs="{'invisible': [('code','!=','report_stock')]}">
+		    			<field name="report_stock_location_ids" options="{'no_open':True, 'no_create':True}" widget="many2many_tags"/>
+		    			<field name="report_stock_product_ids" options="{'no_open':True, 'no_create':True}" widget="many2many_tags"/>
+		    		</group>
+		    	</xpath>
+		    	
+		     </field>
+		</record>
+
+		<record id="ms_report_stock_form_view_inventory" model="ir.ui.view">
+		    <field name="name">ms.report.stock.form.inventory</field>
+		    <field name="model">ms.generic.excel.report.wizard</field>
+		    <field name="type">form</field>
+		    <field name="inherit_id" ref="ms_generic_excel_report.ms_generic_excel_report_wizard_form_view_inventory"/>
+		    <field name="arch" type="xml">
+		        
+		    	<xpath expr="//form/group" position="after">
+		    		<group string="Stock Report Filter" col="4" attrs="{'invisible': [('code','!=','report_stock')]}">
+		    			<field name="report_stock_location_ids" options="{'no_open':True, 'no_create':True}" widget="many2many_tags"/>
+		    			<field name="report_stock_product_ids" options="{'no_open':True, 'no_create':True}" widget="many2many_tags"/>
+		    		</group>
+		    	</xpath>
+		    	
+		     </field>
+		</record>
+
+		<record id="ms_report_stock_form_view_accounting" model="ir.ui.view">
+		    <field name="name">ms.report.stock.form.accounting</field>
+		    <field name="model">ms.generic.excel.report.wizard</field>
+		    <field name="type">form</field>
+		    <field name="inherit_id" ref="ms_generic_excel_report.ms_generic_excel_report_wizard_form_view_accounting"/>
+		    <field name="arch" type="xml">
+		        
+		    	<xpath expr="//form/group" position="after">
+		    		<group string="Stock Report Filter" col="4" attrs="{'invisible': [('code','!=','report_stock')]}">
+		    			<field name="report_stock_location_ids" options="{'no_open':True, 'no_create':True}" widget="many2many_tags"/>
+		    			<field name="report_stock_product_ids" options="{'no_open':True, 'no_create':True}" widget="many2many_tags"/>
+		    		</group>
+		    	</xpath>
+		    	
+		     </field>
+		</record>
+		
+	</data>
+</odoo>

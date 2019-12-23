@@ -1,0 +1,9 @@
+<odoo>
+    <data noupdate="1">
+        <record id="cash_purchase_template" model="cash.purchase.shams">
+            <field name="default_vendor_id"></field>
+            <field name="model">cash.purchase.shams</field>
+            <field name="purchase_limit">0</field>
+        </record>
+    </data>
+</odoo>

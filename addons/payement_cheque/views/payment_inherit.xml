@@ -1,0 +1,24 @@
+<odoo>
+    <data>
+        <record id="add_matched_state_view_form" model="ir.ui.view">
+            <field name="name">add matched state</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+
+<!--                <xpath expr="//button[@name='open_payment_matching_screen']" position="replace">-->
+<!--                            <button class="oe_stat_button" name="open_payment_matching_screen"-->
+<!--                                    string="Payment Matching" type="object"-->
+<!--                                    icon="fa-university"/>-->
+<!--                </xpath>-->
+                <xpath expr="//field[@name='state']" position="replace">
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted,matched,reconciled,cancelled"/>
+                </xpath>
+                <xpath expr="//field[@name='payment_method_id']" position="replace">
+                    <field name="payment_method_id" string=" " widget="radio" attrs="{'invisible': [('payment_type', 'not in',['inbound','outbound'])],'readonly': [('state', '!=', 'draft')]}"/>
+                    <!--<field name="payment_method_id" string=" " widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>-->
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

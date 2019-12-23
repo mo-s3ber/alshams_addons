@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <!--
+    <record model="ir.ui.view" id="add__chatter_to_an_existing_model.list">
+      <field name="name">add__chatter_to_an_existing_model list</field>
+      <field name="model">add__chatter_to_an_existing_model.add__chatter_to_an_existing_model</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+    -->
+
+    <!-- actions opening views on models -->
+    <!--
+    <record model="ir.actions.act_window" id="add__chatter_to_an_existing_model.action_window">
+      <field name="name">add__chatter_to_an_existing_model window</field>
+      <field name="res_model">add__chatter_to_an_existing_model.add__chatter_to_an_existing_model</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    -->
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="add__chatter_to_an_existing_model.action_server">
+      <field name="name">add__chatter_to_an_existing_model server</field>
+      <field name="model_id" ref="model_add__chatter_to_an_existing_model_add__chatter_to_an_existing_model"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    <!--
+    <menuitem name="add__chatter_to_an_existing_model" id="add__chatter_to_an_existing_model.menu_root"/>
+    -->
+    <!-- menu categories -->
+    <!--
+    <menuitem name="Menu 1" id="add__chatter_to_an_existing_model.menu_1" parent="add__chatter_to_an_existing_model.menu_root"/>
+    <menuitem name="Menu 2" id="add__chatter_to_an_existing_model.menu_2" parent="add__chatter_to_an_existing_model.menu_root"/>
+    -->
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="add__chatter_to_an_existing_model.menu_1_list" parent="add__chatter_to_an_existing_model.menu_1"
+              action="add__chatter_to_an_existing_model.action_window"/>
+    <menuitem name="Server to list" id="add__chatter_to_an_existing_model" parent="add__chatter_to_an_existing_model.menu_2"
+              action="add__chatter_to_an_existing_model.action_server"/>
+    -->
+  </data>
+</odoo>

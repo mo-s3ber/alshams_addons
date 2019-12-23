@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="custom_inventory_valuation_tree" model="ir.ui.view">
+            <field name="name">custom.inventory.valuation.tree</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock_account.view_stock_product_tree2"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='stock_value']" position="replace">
+                    <field name="inventory_valuation_value" sum="Stock Valuation" widget="monetary" options="{'currency_field': 'stock_value_currency_id'}"/>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

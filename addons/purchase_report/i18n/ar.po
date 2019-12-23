@@ -1,0 +1,177 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* purchase_report
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-04-23 14:11+0000\n"
+"PO-Revision-Date: 2019-04-23 14:11+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "0.0"
+msgstr ""
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Adding VAT"
+msgstr "اضافة ضريبة القيمة المضافة"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Analytical Account"
+msgstr "المشروع"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Att to:"
+msgstr "عناية السيد:"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Comercial and Industrial TAX deduction"
+msgstr "خصم ارباح تجارية و صناعية"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Conditions:"
+msgstr "الشروط"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Email"
+msgstr "البريد الالكتروني"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Executive Director"
+msgstr "المدير التنفيذي"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Fax"
+msgstr "الفاكس"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "General Conditions:"
+msgstr "الشروط العامة"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Issue Date:"
+msgstr "تاريخ الاصدار:"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Item"
+msgstr "البيان"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "NET"
+msgstr "الصافي"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Number"
+msgstr "م"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Payment Terms:"
+msgstr "شروط الدفع"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Please kindly supply the following items:"
+msgstr "برجاء من سيادتكم التكرم بتوريد الاصناف الاتية:"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Procurement Department Manager"
+msgstr "مدير ادارة الاحتياجات"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Purchase Department"
+msgstr "ادارة المشتريات"
+
+#. module: purchase_report
+#: model:ir.actions.report,name:purchase_report.action_report_purchase_order_new
+msgid "Purchase Order New"
+msgstr "طلب شراء جديد"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Purchase Order number"
+msgstr "أمر شراء رقم:"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Purchase Request number"
+msgstr "طلب شراء رقم:"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Quantity"
+msgstr "الكمية"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Subtotal"
+msgstr "الاجمالي غير شامل"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Supplier:"
+msgstr "المورد:"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Supply Order"
+msgstr "أمر توريد"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Technical Department"
+msgstr "الادارة الفنية"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Technical Sector Director"
+msgstr "مدير القطاع الفني"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Telephone"
+msgstr "التليفون"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Unit Price"
+msgstr "سعر الوحدة"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Unit of Measure"
+msgstr "الوحدة"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Untaxed Amount"
+msgstr "الاجمالي غير شامل"
+
+#. module: purchase_report
+#: model_terms:ir.ui.view,arch_db:purchase_report.report_purchaseorder_document_new
+msgid "Work Type"
+msgstr "نوع الاعمال:"
+

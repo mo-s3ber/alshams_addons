@@ -1,0 +1,323 @@
+<odoo>
+    <data>
+
+        <template id="report_picking">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="text-right text-center">
+                                <h4><span t-field="o.name" dir="auto"/>اذن
+                                    رقم
+                                </h4>
+                            </div>
+                            <table class="table table-bordered border border-dark text-right text-center">
+                                <thead>
+                                    <tr>
+                                        <th class="table table-bordered border border-dark text-right text-center">
+
+                                        </th>
+                                        <th class="table table-bordered border border-dark text-right text-center">
+                                            <strong dir="auto">كود المخزن :</strong>
+                                        </th>
+                                        <th class="table table-bordered border border-dark text-right text-center">
+                                            <span t-field="o.scheduled_date"/>
+                                        </th>
+                                        <th class="table table-bordered border border-dark text-right text-center">
+                                            <strong dir="auto">التاريخ :</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr dir="auto">
+                                        <td class="table table-bordered border border-dark text-right text-center">
+                                            <span t-field='o.location_id'></span>
+                                        </td>
+
+                                        <td dir="auto"
+                                            class="table table-bordered border border-dark text-right text-center">الى
+                                            مخزن :
+                                        </td>
+                                        <t t-if="o.location_id">
+                                            <td class="table table-bordered border border-dark text-right text-center">
+                                                <span t-field='o.location_id'></span>
+                                            </td>
+                                        </t>
+                                        <td dir="auto"
+                                            class="table table-bordered border border-dark text-right text-center">
+                                            مستلمه من :
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3"
+                                            class="table table-bordered border border-dark text-right text-center">
+                                            <span t-field="o.origin1"></span>
+                                        </td>
+                                        <td dir="auto" width="25%"
+                                            class="table table-bordered border border-dark text-right text-center">أمر
+                                            رقم :
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <br/>
+                            <table class="table table-bordered border border-dark text-right text-center" border="4"
+                                   style="width:100%;"
+                                   t-if="o.move_line_ids">
+                                <t t-set="has_barcode"
+                                   t-value="any([move_ids_without_package.product_id and move_ids_without_package.product_id.sudo().barcode or move_ids_without_package.package_id for move_ids_without_package in o.move_line_ids])"/>
+                                <t t-set="has_serial_number"
+                                   t-value="o.move_line_ids.filtered(lambda ml: ml.lot_id or ml.lot_name)"
+                                   groups="stock.group_production_lot"/>
+                                <thead>
+                                    <tr>
+                                        <th class="table table-bordered border border-dark text-right text-center"
+                                            width="10%">
+                                            <strong>
+                                                ملاحظات
+                                            </strong>
+                                        </th>
+                                        <th class="table table-bordered border border-dark text-right text-center"
+                                            width="10%">
+                                            <strong>كود التكلفة</strong>
+                                        </th>
+                                        <th width="10%"
+                                            class="table table-bordered border border-dark text-right text-center">
+                                            <strong>الكمية</strong>
+                                        </th>
+                                        <th width="10%"
+                                            class="table table-bordered border border-dark text-right text-center">
+                                            <strong>الوحدة</strong>
+                                        </th>
+                                        <th t-if="o.picking_type_id.code != 'outgoing'" width="45%"
+                                            class="table table-bordered border border-dark">
+                                            <strong>اسم الصنف</strong>
+                                        </th>
+                                        <th width="10%"
+                                            class="table table-bordered border border-dark text-right text-center">
+                                            <strong>
+                                                كود الصنف
+                                            </strong>
+                                        </th>
+                                        <th width="2%"
+                                            class="table table-bordered border border-dark text-right text-center">
+                                            <strong>
+                                                م
+                                            </strong>
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.move_ids_without_package.sorted(key=lambda m: m.product_id.id)"
+                                       t-as="move">
+                                        <t t-foreach="move.move_line_ids.sorted(key=lambda ml: ml.location_id.id)"
+                                           t-as="ml">
+                                            <tr>
+                                                <td class="table table-bordered border border-dark text-right text-center">
+
+                                                </td>
+                                                <td class="table table-bordered border border-dark text-right text-center">
+
+                                                </td>
+                                                <td class="table table-bordered border border-dark text-right text-center">
+                                                    <span t-if="o.state != 'done'" t-field="ml.product_uom_qty"/>
+                                                    <span t-if="o.state == 'done'" t-field="ml.qty_done"/>
+                                                    <span t-field="ml.product_uom_id" groups="uom.group_uom"/>
+
+                                                </td>
+                                                <td class="table table-bordered border border-dark text-right text-center">
+                                                    <span t-field="ml.product_uom_id"/>
+
+                                                </td>
+                                                <td t-if="o.picking_type_id.code != 'incoming'"
+                                                    class="table table-bordered border border-dark">
+                                                    <span t-esc="ml.location_id.display_name"/>
+                                                    <t t-if="ml.package_id">
+                                                        <span t-field="ml.package_id"/>
+                                                    </t>
+                                                </td>
+                                                <td width="45%"
+                                                    class="table table-bordered border border-dark text-right text-center">
+                                                    <font size="-1">
+                                                        <span t-field="ml.product_id.display_name"/>
+                                                    </font>
+
+                                                </td>
+                                                <td class="table table-bordered border border-dark text-right text-center">
+                                                    <font size="-1">
+                                                        <span t-field="ml.product_id.default_code"/>
+                                                    </font>
+                                                </td>
+                                                <td class="table table-bordered border border-dark"></td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <table class="table table-bordered border border-dark text-right text-center" border="4"
+                                   style="width:100%;"
+                                   t-if="o.package_level_ids and o.picking_type_entire_packs">
+                                <thead>
+                                    <tr>
+                                        <th width="25%"
+                                            class="table table-bordered border border-dark text-right text-center">
+                                            Package
+                                        </th>
+                                        <th width="25%" dir="auto" class="table table-bordered border border-dark">
+                                            مستلمة من
+                                        </th>
+                                        <th width="25%" dir="auto" class="table table-bordered border border-dark">الي
+                                            مخزن
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.package_level_ids.sorted(key=lambda p: p.package_id.name)"
+                                        t-as="package">
+                                        <t t-set="package" t-value="package.with_context({'picking_id':o.id})"/>
+                                        <td class="table table-bordered border border-dark">
+                                            <span t-field="package.package_id.name"/>
+                                        </td>
+                                        <td class="table table-bordered border border-dark">
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', package.package_id.name, 600, 100)"
+                                                 style="width:300px    ;height:50px" alt="Barcode"/>
+                                        </td>
+                                        <td class="table table-bordered border border-dark">
+                                            <span t-field="package.location_id"/>
+                                        </td>
+                                        <td class="table table-bordered border border-dark">
+                                            <span t-field="package.location_dest_id"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div style="text-align: right;">
+                                <h5>:ملاحظات
+                                    <br/>
+                                </h5>
+                            </div>
+                            <div dir="auto">
+                                <div class="row text-right" dir="auto">
+                                    <div class="col-4">
+                                        السائق :
+                                        ---------------------
+                                    </div>
+                                    <div class="col-4">
+                                        التوقيع : -----------------
+                                    </div>
+                                    <div class="col-4">
+                                        التليفون : -------------------
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div dir="auto">
+                                    <div class="row text-right" dir="auto">
+                                        <div class="col-4">
+                                            طالب الصرف :
+                                            ---------------------
+                                        </div>
+                                        <div class="col-4">
+                                            التوقيع : -----------------
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div dir="auto">
+                                        <div class="row text-right" dir="auto">
+                                            <div class="col-4">
+                                                اﻻسم :
+                                                ---------------------
+                                            </div>
+                                            <div class="col-4">
+                                                اﻻسم : -----------------
+                                            </div>
+                                            <div class="col-4">
+                                                اﻻسم : -----------------
+                                            </div>
+
+                                        </div>
+                                        <div>
+                                            <div dir="auto">
+                                                <div class="row text-right" dir="auto">
+                                                    <div class="col-4">
+                                                        التوقيع:
+                                                        ---------------------
+                                                    </div>
+                                                    <div class="col-4">
+                                                        التوقيع : -----------------
+                                                    </div>
+                                                    <div class="col-4">
+                                                        التوقيع : -----------------
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div dir="auto">
+                                                <div class="row text-right" dir="auto">
+                                                    <div class="col-4">
+                                                        المستلم :
+                                                        ---------------------
+                                                    </div>
+                                                    <div class="col-4">
+                                                        أمين المخزن : -----------------
+                                                    </div>
+                                                    <div class="col-4">
+                                                        مدير المشروع : -----------------
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right text-center" dir="auto">
+                            <span class="ml-2">منشا بواسطه</span>
+
+                            <span class="ml-2">
+                                <span t-field="o.create_uid"></span>
+                            </span>
+
+                            <span class="ml-2">في</span>
+
+                            <span class="ml-2">
+                                <span t-field="o.create_date"></span>
+                            </span>
+                            <span class="ml-2">
+                                أخر تحديث
+                            </span>
+                            <span class="ml-2">
+                                <span t-field="o.write_uid"></span>
+                            </span>
+                            <span class="ml-2">في</span>
+                            <span class="ml-2">
+                                <span t-field="o.write_date"></span>
+                            </span>
+                        </div>
+
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="transfer_report_stock">
+
+            <t t-call="web.html_container">
+
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="transfer_report.report_picking" t-lang="lang"/>
+
+                </t>
+
+            </t>
+        </template>
+    </data>
+</odoo>

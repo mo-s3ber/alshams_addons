@@ -1,0 +1,142 @@
+<odoo>
+
+    <record id="view_partner_property_form_subcontract_inherit" model="ir.ui.view">
+        <field name="name">res.partner.subcontract.property.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <group name="purchase" position="after">
+                <group string="Subcontract" name="subcontract" priority="3">
+                    <field name="subcontractor"/>
+                    <field name="property_supplier_payment_term_id"/>
+                </group>
+            </group>
+        </field>
+    </record>
+    <record id="view_partner_property_form1" model="ir.ui.view">
+        <field name="name">res.partner.subcontract.property.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority">36</field>
+        <field name="groups_id" eval="[(4, ref('base.group_multi_currency'))]"/>
+        <field name="arch" type="xml">
+            <group name="subcontract" position="inside">
+                <field name="property_subcontract_currency_id" options="{'no_create': True, 'no_open': True}"/>
+            </group>
+        </field>
+    </record>
+    <record id="act_res_partner_2_subcontract_order" model="ir.actions.act_window">
+        <field name="name">RFQs and subcontracts</field>
+        <field name="res_model">subcontract.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph</field>
+        <field name="context">{'search_default_partner_id': active_id}</field>
+        <field name="groups_id" eval="[(4, ref('subcontract.group_subcontract_user'))]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                This subcontractor has no subcontract order. Create a new RfQ
+            </p>
+            <p>
+                The request for quotation is the first step of the subcontracts flow. Once
+                converted into a subcontract order, you will be able to control the receipt
+                of the products and the progress Invoices.
+            </p>
+        </field>
+    </record>
+
+    <!-- Partner kanban view inherited -->
+    <record model="ir.ui.view" id="subcontract_partner_kanban_view">
+        <field name="name">res.partner.kanban.subcontractorder.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+        <field name="groups_id" eval="[(4, ref('subcontract.group_subcontract_user'))]"/>
+        <field name="arch" type="xml">
+            <field name="mobile" position="after">
+                <field name="subcontract_order_count"/>
+            </field>
+            <xpath expr="//div[hasclass('oe_kanban_partner_links')]" position="inside">
+                <span t-if="record.subcontract_order_count.value>0" class="badge badge-pill">
+                    <i class="fa fa-fw fa-shopping-cart" role="img" aria-label="Shopping cart"
+                       title="Shopping cart"/>
+                    <t t-esc="record.subcontract_order_count.value"/>
+                </span>
+            </xpath>
+        </field>
+    </record>
+    <!--todo:check res_partner_view for account.invoice, journal_type -->
+    <record id="act_res_partner_2_supplier_invoices" model="ir.actions.act_window">
+        <field name="name">Progress Invoice</field>
+        <field name="res_model">account.invoice</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph</field>
+        <field name="domain">[('type','=','in_invoice')]</field>
+        <field name="context">{'search_default_partner_id': active_id, 'default_type': 'in_invoice', 'type':
+            'in_invoice', 'journal_type': 'purchase'}
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Record a new progress invoice
+            </p>
+            <p>
+                progress invoice can be pre-generated based on subcontract
+                orders or receipts. This allows you to control invoice
+                you receive from your subcontractor according to the draft
+                document in Odoo.
+            </p>
+        </field>
+    </record>
+    <record id="res_partner_view_subcontract_buttons" model="ir.ui.view">
+        <field name="name">res.partner.view.subcontract.buttons</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority" eval="9"/>
+        <field name="groups_id" eval="[(4, ref('subcontract.group_subcontract_user'))]"/>
+        <field name="arch" type="xml">
+            <button name="toggle_active" position="before">
+                <field name="subcontractor" invisible="1"/>
+                <button class="oe_stat_button" name="%(subcontract.act_res_partner_2_subcontract_order)d"
+                        type="action"
+                        groups="subcontract.group_subcontract_user"
+                        attrs="{'invisible': [('subcontractor', '=', False)]}" icon="fa-shopping-cart">
+                    <field string="Subcontracts" name="subcontract_order_count" widget="statinfo"/>
+                </button>
+            </button>
+            <page name="internal_notes" position="inside">
+                <group colspan="2" col="2" groups="subcontract.group_warning_subcontract">
+                    <separator string="Warning on the Subcontract Order" colspan="4"/>
+                    <field name="subcontract_warn" nolabel="1"/>
+                    <field name="subcontract_warn_msg" colspan="3" nolabel="1"
+                           attrs="{'required':[('purchase_warn', '!=', False), ('purchase_warn','!=','no-message')],'readonly':[('purchase_warn','=','no-message')]}"/>
+                </group>
+            </page>
+        </field>
+    </record>
+    <record id="res_partner_view_subcontract_account_buttons" model="ir.ui.view">
+        <field name="name">res.partner.view.subcontract.account.buttons</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority" eval="12"/>
+        <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name="arch" type="xml">
+            <button name="toggle_active" position="before">
+                <button class="oe_stat_button" name="%(subcontract.act_res_partner_2_supplier_invoices)d"
+                        type="action"
+                        attrs="{'invisible': [('subcontractor', '=', False)]}" icon="fa-pencil-square-o"
+                        help="Progress Invoice">
+                    <field string="Progress Invoices" name="subcontract_supplier_invoice_count" widget="statinfo"/>
+                </button>
+            </button>
+        </field>
+    </record>
+    <record id="view_subcontract_res_partner_filter" model="ir.ui.view">
+        <field name="name">res.partner.select.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <filter name="supplier" position="after">
+                <filter string="Subcontractors" name="subcontract"
+                        domain="[('subcontractor','=',True), ('parent_id', '=', False)]"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

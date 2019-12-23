@@ -1,0 +1,120 @@
+<odoo>
+    <data>
+        <record id="cash_purchase_view_form" model="ir.ui.view">
+            <field name="name">cash.purchase.shams.view.form</field>
+            <field name="model">cash.purchase.shams</field>
+            <field name="arch" type="xml">
+                <form string="Cash Purchase Settings" create="0">
+                    <sheet>
+                        <!-- col="2"-->
+                        <group>
+                            <group>
+                                <field name="default_vendor_id"/>
+                            </group>
+                            <group>
+                                <field name="purchase_limit"/>
+                            </group>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!--Cost Estimation approval-->
+
+        <record id="cash_purchase_view_tree" model="ir.ui.view">
+            <field name="name">cash.purchase.shams.view.form</field>
+            <field name="model">cash.purchase.shams</field>
+            <field name="arch" type="xml">
+                <tree string="Cash Purchase Settings" create="0">
+                    <field name="default_vendor_id"/>
+                    <field name="purchase_limit"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--<record model="ir.rule" id="per_user_rule">-->
+            <!--<field name="name">User: see the individual Record</field>-->
+            <!--<field name="model_id" ref="purchase.model_purchase_order"/>-->
+            <!--&lt;!&ndash;['|',('user_id','=',False),('user_id','=',user.id)]&ndash;&gt;-->
+            <!--<field name="domain_force">['|',('user_id','=',False),('user_id','=',user.id)]</field>-->
+            <!--&lt;!&ndash;<field name="domain_force">[('user_id','=',uid)]</field>&ndash;&gt;-->
+            <!--<field name="groups" eval="[(4,ref('cash_purchase_shams.group_cash_purchase'))]"/>-->
+        <!--</record>-->
+
+
+
+        <record id="action_cash_purchase_settings" model="ir.actions.act_window">
+            <field name="name">Cash Purchase</field>
+            <field name="res_model">cash.purchase.shams</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="cash_purchase_view_tree"/>
+        </record>
+        <record id="group_cash_purchase" model="res.groups">
+            <field name="name">Cash Purchase</field>
+            <field name="implied_ids"
+                   eval="[(4, ref('stock.group_stock_manager'),ref('purchase.group_purchase_user'))]"/>
+            <!--<field name="implied_ids" eval="[(4, ref('purchase.group_purchase_manager'))]"/>-->
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+        <!--<record id="purchase.purchase_rfq" model="ir.actions.act_window">-->
+            <!--<field name="name">Requests for Quotation</field>-->
+            <!--<field name="type">ir.actions.act_window</field>-->
+            <!--<field name="res_model">purchase.order</field>-->
+            <!--<field name="domain">[('user_id', '=', uid)]</field>-->
+            <!--<field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>-->
+            <!--<field name="search_view_id" ref="purchase.view_purchase_order_filter"/>-->
+            <!--<field name="help" type="html">-->
+              <!--<p class="o_view_nocontent_smiling_face">-->
+                <!--Create a request for quotation-->
+              <!--</p><p>-->
+                <!--The quotation contains the history of the discussion-->
+                <!--you had with your vendor.-->
+              <!--</p>-->
+            <!--</field>-->
+        <!--</record>-->
+
+        <record id="custom_purchase_rfq" model="ir.actions.act_window">
+            <field name="name">Requests for Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="domain">[('user_id', '=', uid)]</field>
+            <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
+            <field name="search_view_id" ref="purchase.view_purchase_order_filter"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a request for quotation
+              </p><p>
+                The quotation contains the history of the discussion
+                you had with your vendor.
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_purchase_inv"
+                  name="Cash Purchase"
+                  parent="stock.menu_stock_root"
+                  groups="cash_purchase_shams.group_cash_purchase"
+                  sequence="5"
+        />
+        <!--groups="stock.group_stock_manager"-->
+
+        <menuitem id="menu_purchase_inventory"
+                  name="Cash Purchase"
+                  parent="menu_purchase_inv"
+                  groups="cash_purchase_shams.group_cash_purchase"
+                  action="custom_purchase_rfq"
+        />
+
+        <menuitem id="menu_purchase_settings"
+                  name="Cash Purchase Settings"
+                  parent="menu_purchase_inv"
+                  groups="base.group_system"
+                  action="action_cash_purchase_settings"
+
+        />
+        <!--groups="purchase.group_purchase_manager"-->
+    </data>
+</odoo>

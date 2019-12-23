@@ -1,0 +1,40 @@
+<odoo>
+    <data>
+        <record id="custom_invoice_progress_form" model="ir.ui.view">
+            <field name="name">account.invoice.form.custom</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="progress_invoice.invoice_progress_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='account_analytic_id']" position="after">
+                    <field name="project_code"/>
+                </xpath>
+
+                <xpath expr="//page[@name='other_info']" position="after">
+                    <page string="Settlements">
+                        <group>
+                            <group>
+                                <field name="sum_A_T_tax"/>
+                                <field name="sum_kowa_amly_tax"/>
+                                <field name="sum_tameynat_tax"/>
+                                <field name="sum_tamyn_a3mal_tax"/>
+                                <field name="sum_tameynat_mohtagz_tax"/>
+                                <field name="sum_daf3t_tax"/>
+<!--                                <field name="sum_rest_tax"/>-->
+                                <field name="sum_all_tax"/>
+                            </group>
+                            <group>
+                                <field name="sum_total_amount"/>
+                                <field name="net"/>
+                                <field name="sum_payments"/>
+                                <field name="balance_Balance_due"/>
+                                <field name="balance_advance_payment"/>
+                                <field name="balance_reserved_insurance"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

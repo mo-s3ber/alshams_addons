@@ -1,0 +1,157 @@
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form_inherit" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.guarantee</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@data-key='account']" position="inside">
+                    <h2>Letter of guarantee</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Guarantee Account</span>
+                                <div class="text-muted">
+                                    Main Guarantee Account of your company
+                                </div>
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label for="guarantee_account_id" class="col-lg-3 o_light_label"/>
+                                        <field name="guarantee_account_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<field name="guarantee_account_id"/>-->
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="letter_guarantee_view_form" model="ir.ui.view">
+            <field name="name">letter.guarantee.view.form</field>
+            <field name="model">letter.guarantee</field>
+            <field name="arch" type="xml">
+                <form string="Letter Of Guarantee">
+                    <header>
+                        <button name="issue_lg" states="draft" string="Issue LG" type="object" icon="fa-cogs"
+                                class="oe_highlight"/>
+                        <button name="close_lg" string="Close"
+                                attrs="{'invisible': ['|', ('state', '!=','open'), ('type', '=','advanced_prepayment')]}"
+                                type="object" icon="fa-cogs"
+                                class="oe_highlight"/>
+                        <button name="close_payment" string="Close"
+                                attrs="{'invisible': ['|', '|', ('state', '!=','open'), ('type', '!=','advanced_prepayment'), ('amount_insurance_current','!=',0)]}"
+                                type="object" icon="fa-cogs"
+                                class="oe_highlight"/>
+                        <field name="state" widget="statusbar" nolabel="1" readonly="1"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="open_moves" icon="fa-tasks">
+                                <field string="Journal Entries" name="journal_count" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" default_focus="1" placeholder="Name"/>
+                            </h1>
+                        </div>
+                        <group col="2">
+                            <group>
+                                <field name="code"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="partner_id"/>
+                                <field name="ref"/>
+                                <field name="analytic_account_id"/>
+                                <field name="analytic_group_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="type"/>
+                            </group>
+                            <group>
+                                <field name="journal_id"/>
+                                <field name="date_issue"/>
+                                <field name="date_expire"/>
+                                <field name="amount_total_start" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="percent_insurance" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="amount_insurance_start"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="LG Deduction">
+                                <field name="deduction_ids" widget="one2many_list">
+                                    <tree editable="bottom" string="LG Deduction">
+                                        <field name="ref" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="journal_id"/>
+                                        <field name="memo" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="amount_total" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="state" readonly="1"/>
+                                        <button name="confirm" type="object" icon="fa-check"
+                                                confirm="Are you sure want to do this?" states="draft"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group class="oe_subtotal_footer" colspan="2">
+                            <field name="amount_total_deduction"/>
+                            <field name="amount_total_current"/>
+                            <field name="amount_insurance_current"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="letter_guarantee_view_tree" model="ir.ui.view">
+            <field name="name">letter.guarantee.view.tree</field>
+            <field name="model">letter.guarantee</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="partner_id"/>
+                    <field name="ref"/>
+                    <field name="analytic_account_id"/>
+                    <field name="analytic_group_id"/>
+                    <field name="company_id"/>
+                    <field name="type"/>
+                    <field name="journal_id"/>
+                    <field name="date_issue"/>
+                    <field name="date_expire"/>
+                    <field name="amount_total_start"/>
+                    <field name="amount_total_current"/>
+                    <field name="percent_insurance"/>
+                    <field name="amount_insurance_start"/>
+                    <field name="amount_insurance_current"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_letter_guarantee" model="ir.actions.act_window">
+            <field name="name">Letter Of Guarantee</field>
+            <field name="res_model">letter.guarantee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="letter_guarantee_view_tree"/>
+        </record>
+
+        <menuitem action="action_letter_guarantee"
+                  id="menu_action_letter_guarantee"
+                  parent="account.menu_finance_entries"
+                  sequence="500"/>
+
+        <record id="view_account_journal_form" model="ir.ui.view">
+            <field name="name">account.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <field name="bank_id" position="after">
+                    <field name="account_analytic_id"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

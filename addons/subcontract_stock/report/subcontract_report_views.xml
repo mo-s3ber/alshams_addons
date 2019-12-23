@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="subcontract_report_view_search" model="ir.ui.view">
+        <field name="name">subcontract.report.search.stock</field>
+        <field name="model">subcontract.report</field>
+        <field name="inherit_id" ref="subcontract.view_subcontract_order_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="picking_type_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

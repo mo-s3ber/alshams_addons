@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_inventory_journal_entry_alshams_inventory_journal_entry_alshams,inventory_journal_entry_alshams.inventory_journal_entry_alshams,model_inventory_journal_entry_alshams_inventory_journal_entry_alshams,,1,0,0,0

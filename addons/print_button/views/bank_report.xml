@@ -1,0 +1,14 @@
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<odoo>-->
+    <!--<data>-->
+        <!--<report-->
+                <!--id="action_report_payment_bank"-->
+                <!--model="account.bank.statement.line"-->
+                <!--string="Payment Arabic"-->
+                <!--report_type="qweb-html"-->
+                <!--name="print_button.report_payment_receipt_bank"-->
+                <!--file="payment-report.report_payment_receipt_bank"-->
+                <!--menu="True"-->
+        <!--/>-->
+    <!--</data>-->
+<!--</odoo>-->

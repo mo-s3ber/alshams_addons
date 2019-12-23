@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <record id="stock_report_custom_inherit_view" model="ir.ui.view">
+            <field name="name">stock.report.custom.inherit.view</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="stock.report_inventory"/>
+            <field name="arch" type="xml">
+                <xpath expr="//table[2]/thead/tr/th[last()]" position="before">
+                       <th>Theoretical Quantity</th>
+                </xpath>
+                <xpath expr="//table[2]/tbody/t/tr[2]/td[last()]" position="before">
+                        <td><span t-field="line.theoretical_qty"/></td>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

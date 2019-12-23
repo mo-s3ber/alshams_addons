@@ -1,0 +1,34 @@
+<odoo>
+    <data>
+
+        <!-- Inherit Form View to Modify it -->
+        <record id="tax_for_all" model="ir.ui.view">
+            <field name="name">tax.for.all</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//sheet/group/group[2]" position="inside">
+                    <!-- Add your fields or attributes here -->
+                    <field name="tax_id" widget="many2many_tags" string="Taxes"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Inherit Form View to Modify it -->
+        <record id="cont_acc_tax" model="ir.ui.view">
+            <field name="name">cont.acc.tax</field>
+            <field name="model">subcontract.order</field>
+            <field name="inherit_id" ref="subcontract.subcontract_order_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//sheet/group/group[2]" position="inside">
+                    <!-- Add your fields or attributes here -->
+                    <field name="tax_id" widget="many2many_tags" string="Taxes"/>
+                    <field name="Analytic_id"/>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

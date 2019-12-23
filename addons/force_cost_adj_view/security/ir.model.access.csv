@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_force_cost_adj_view_force_cost_adj_view,force_cost_adj_view.force_cost_adj_view,model_force_cost_adj_view_force_cost_adj_view,,1,0,0,0

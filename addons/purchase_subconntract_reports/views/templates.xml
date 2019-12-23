@@ -1,0 +1,461 @@
+<odoo>
+    <data>
+        <record id="paperformat_euro_landscape" model="report.paperformat">
+            <field name="name">estimition A4 Landscape</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_bottom">23</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report
+                id="progress_invoice_reporting"
+                model="account.invoice"
+                string="المستخلص"
+                report_type="qweb-pdf"
+                name="purchase_subconntract_reports.progress_invoice_report"
+                attachment_use="False"
+                file="purchase_subconntract_reports.progress_invoice_report"
+        />
+        <report
+                id="mowrd_report_id"
+                model="account.invoice"
+                string="فاتوره مورد"
+                report_type="qweb-pdf"
+                name="purchase_subconntract_reports.mowrd_report"
+                attachment_use="False"
+                file="purchase_subconntract_reports.mowrd_report"
+        />
+        <report
+                id="client_report_id"
+                model="account.invoice"
+                string="فاتوره عميل"
+                report_type="qweb-pdf"
+                name="purchase_subconntract_reports.client_report"
+                attachment_use="False"
+                file="purchase_subconntract_reports.client_report"
+        />
+
+        <template id="mowrd_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page text-right" dir="rtl">
+                            <h1 align="center" style="color:#000;">فاتوره مورد</h1>
+                            <span t-call="purchase_subconntract_reports.header_of_mowrd"/>
+                            <br/>
+                            <span t-call="purchase_subconntract_reports.main_table"/>
+                            <span t-call="purchase_subconntract_reports.tax_table"/>
+                            <span t-call="purchase_subconntract_reports.total_table"/>
+                            <br/>
+                            <span t-call="purchase_subconntract_reports.log_line"/>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+        <template id="client_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page text-right" dir="rtl">
+                            <h1 align="center" style="color:#000;">فاتوره عميل</h1>
+                            <span t-call="purchase_subconntract_reports.header_of_client"/>
+                            <br/>
+                            <span t-call="purchase_subconntract_reports.main_table"/>
+                            <span t-call="purchase_subconntract_reports.tax_table"/>
+                            <span t-call="purchase_subconntract_reports.total_table"/>
+                            <br/>
+                            <span t-call="purchase_subconntract_reports.log_line"/>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+        <template id="progress_invoice_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page text-right" dir="rtl">
+                            <h1 align="center" style="color:#000;">مستخلص اعمال مقاول باطن</h1>
+                            <!--                            <span t-call="purchase_subconntract_reports.header_of_mostkhas"/>-->
+                            <br/>
+                            <div class="container">
+                                <p class="text-center">
+                                    رقم
+                                    <t t-if="o.number2">
+                                        <span t-field="o.number2"/>
+                                    </t>
+                                </p>
+                                <p class="text-center">
+                                    عن أعمال من :
+                                    <t t-if="o.date_from">
+                                        <span class="mr-2" t-field="o.date_from"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="mr-2">-------------</span>
+                                    </t>
+                                </p>
+                                <p class="text-center">
+
+                                    الي
+                                    <t t-if="o.date_from">
+                                        <span class="mr-2" t-field="o.date_to"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="mr-2">-------------</span>
+                                    </t>
+
+                                </p>
+                            </div>
+
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">اسم المشروع :
+                                            <t t-if="o.account_analytic_id">
+                                                <span t-field="o.account_analytic_id"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span>-------------</span>
+                                            </t>
+                                        </th>
+                                        <th scope="col">
+                                            كود المشروع:
+                                            <t t-if="o.account_analytic_id.code">
+                                                <span class="mr-2" t-field="o.account_analytic_id.code"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span class="mr-2">-------------</span>
+                                            </t>
+                                        </th>
+                                        <th scope="col">طبقا لمستخلص العميل رقم:
+                                            <t t-if="o.reference">
+                                                <span class="mr-2" t-field="o.reference"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span class="mr-2">-------------</span>
+                                            </t>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">اسم المقاول :
+                                            <t t-if="o.partner_id">
+                                                <span class="mr-2" t-field="o.partner_id"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span class="mr-2">-------------</span>
+                                            </t>
+                                        </th>
+                                        <td class="font-weight-bold">حجم التعاقد:
+                                            <!--                                            <t t-if="o.subcontract_requisition_id">-->
+                                            <!--                                                <span class="mr-2" t-field="o.subcontract_requisition_id"/>-->
+                                            <!--                                            </t>-->
+                                            <!--                                            <t t-else="">-->
+                                            <span class="mr-2">-------------</span>
+                                            <!--                                            </t>-->
+                                        </td>
+                                        <td class="font-weight-bold">نوع الاعمال:
+                                            <!--                                            <t t-if="o.progress_type">-->
+                                            <!--                                                <span class="mr-2" t-field="o.progress_type"/>-->
+                                            <!--                                            </t>-->
+                                            <!--                                            <t t-else="">-->
+                                            <span class="mr-2">-------------</span>
+                                            <!--                                            </t>-->
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <table class="table table-bordered border border-dark text-right text-center">
+                                <thead>
+                                    <tr class="border-black">
+                                        <th class="table table-bordered border border-dark text-right text-center"
+                                            style='width:1px;white-space:nowrap'
+                                        >م
+                                        </th>
+                                        <th class="table table-bordered border border-dark text-right text-center"
+                                            style='width:2px;white-space:nowrap'
+                                        >كود
+                                            التكلفة
+                                        </th>
+                                        <th class="table table-bordered border border-dark text-right text-center"
+                                        >بيان
+                                            ألاعمال
+                                        </th>
+                                        <th class="table table-bordered border border-dark text-right text-center"
+                                        >
+                                            الوحده
+                                        </th>
+                                        <th class="table table-bordered border border-dark text-right text-center"
+                                        >
+                                            الكمية الاجماليه
+                                        </th>
+                                        <th class="table table-bordered border border-dark text-right text-center"
+                                        >
+                                            الكمية الحالية
+                                        </th>
+                                        <th class="table table-bordered border border-dark text-right text-center"
+                                        >
+                                            الكمية السابقة
+                                        </th>
+                                        <th class="table table-bordered border border-dark text-right text-center"
+                                        >
+                                            الفئة
+                                        </th>
+                                        <th class="table table-bordered border border-dark text-right text-center"
+                                        >
+                                            الأجمالي
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="counter" t-value="1"/>
+                                    <t t-if="'invoice_line_ids' in o.fields_get()">
+                                        <t t-value="o.invoice_line_ids" t-set="lines"/>
+                                    </t>
+                                    <t t-foreach="lines" t-as="line">
+                                        <tr>
+                                            <td class="table table-bordered border border-dark text-right text-center"
+                                                style='width:1px;white-space:nowrap'>
+                                                <t t-if="line.line_sequence">
+                                                    <span t-field="line.line_sequence"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span t-esc="counter"/>
+                                                    <t t-set="counter" t-value="counter+1"/>
+                                                </t>
+                                            </td>
+                                            <td class="table table-bordered border border-dark text-right text-center"
+                                                style='width:1px;white-space:nowrap'>
+                                                <span t-field="line.cost_code"/>
+                                            </td>
+                                            <td class="table table-bordered border border-dark text-right text-center">
+                                                <span t-field="line.name"/>
+                                            </td>
+                                            <td class="table table-bordered border border-dark text-right text-center">
+                                                <span t-field="line.uom_id"/>
+                                            </td>
+                                            <td class="table table-bordered border border-dark text-right text-center">
+                                                <span t-field="line.total_qty"/>
+                                            </td>
+                                            <td class="table table-bordered border border-dark text-right text-center">
+                                                <span t-field="line.quantity"/>
+                                            </td>
+                                            <td class="table table-bordered border border-dark text-right text-center">
+                                                <span t-field="line.prev_qty"/>
+                                            </td>
+                                            <td class="table table-bordered border border-dark text-right text-center">
+                                                <span t-field="line.price_unit"/>
+                                            </td>
+                                            <td class="table table-bordered border border-dark text-right text-center">
+                                                <span t-field="line.total_amount"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+
+                                </tbody>
+                            </table>
+                            <br/>
+                            <table class="table table-bordered text-center" border="2">
+                                <tr>
+                                    <td>
+                                        <strong>إجمالى اﻻعمال</strong>
+                                    </td>
+                                    <td>
+                                        <span t-esc="sum(line.total_amount for line in lines)"
+                                              t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
+                                    </td>
+                                </tr>
+
+                            </table>
+
+                            <br/>
+                            <span t-call="purchase_subconntract_reports.footer_of_mostkhas"/>
+                            <span t-call="purchase_subconntract_reports.log_line"/>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+
+        <template id="total_table">
+        </template>
+        <template id="footer_of_mostkhas">
+            <div>
+                <h4 class="text-center"><strong> الحسابات</strong></h4>
+                <p>
+                   <strong> روجع عقد مقاول الباطن</strong>
+                </p>
+                <p>
+                   <strong> روجعت المستخلصات السابقة</strong>
+                </p>
+                <p>
+                    <strong>  روجعت الدفعات المسدد</strong>
+                </p>
+
+                <p>
+                 <strong>يتم الخصم والأضافة لحساب مصلحة الضرائب من كل دفعة عند الصرف المباشر</strong>
+                </p>
+                <p style="font-weight: bold;">
+                    اجمالي المستخلص ---------------------------------------------------- فقط لاغير
+                </p>
+                <br/>
+                <table class="table table-borderless">
+                    <tr>
+                        <td>
+                            <strong>محاسب الموقع</strong>
+                        </td>
+                        <td>
+                            <strong>مدير المكتب الفني</strong>
+                        </td>
+                        <td>
+                            <strong>المقاول</strong>
+                        </td>
+                        <td>
+                            <strong>مدير المشروع</strong>
+                        </td>
+                        <td>
+                            <strong>مدير عام المشروعات</strong>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </template>
+        <template id='log_line'>
+            <br/>
+            <br/>
+            <div class="text-right text-center" dir="auto">
+                <span class="ml-2">منشا بواسطه</span>
+
+                <span class="ml-2">
+                    <span t-field="o.create_uid"/>
+                </span>
+                <span class="ml-2">في</span>
+
+                <span class="ml-2">
+                    <span t-field="o.create_date"/>
+                </span>
+                <span class="ml-2">
+                    أخر تحديث
+                </span>
+                <span class="ml-2">
+                    <span t-field="o.write_uid"/>
+                </span>
+                <span class="ml-2">في</span>
+                <span class="ml-2">
+                    <span t-field="o.write_date"/>
+                </span>
+            </div>
+        </template>
+
+        <template id="header_of_mowrd">
+            <p>
+                المشروع:
+                <t t-if="o.account_analytic_id">
+                    <span class="mr-2" t-field="o.account_analytic_id"/>
+                </t>
+                <t t-else="">
+                    <span class="mr-2">-------------</span>
+                </t>
+
+            </p>
+            <p>
+                المورد:
+                <t t-if="o.partner_id">
+                    <span class="mr-2" t-field="o.partner_id"/>
+                </t>
+                <t t-else="">
+                    <span class="mr-2">-------------</span>
+                </t>
+            </p>
+            <p>
+                مرجع مورد:
+                <t t-if="o.reference">
+                    <span class="mr-2" t-field="o.reference"/>
+                </t>
+                <t t-else="">
+                    <span class="mr-2">-------------</span>
+                </t>
+            </p>
+            <p>
+                تاريخ الفاتوره:
+                <t t-if="o.date_invoice">
+                    <span class="mr-2" t-field="o.date_invoice"/>
+                </t>
+                <t t-else="">
+                    <span class="mr-2">-------------</span>
+                </t>
+            </p>
+            <p>
+                تاريخ الاستحقاق:
+                <t t-if="o.date_due">
+                    <span class="mr-2" t-field="o.date_due"/>
+                </t>
+                <t t-else="">
+                    <span class="mr-2">-------------</span>
+                </t>
+            </p>
+        </template>
+        <template id="header_of_client">
+            <p>
+                المشروع:
+                <t t-if="o.account_analytic_id">
+                    <span class="mr-2" t-field="o.account_analytic_id"/>
+                </t>
+                <t t-else="">
+                    <span class="mr-2">-------------</span>
+                </t>
+
+            </p>
+            <p>
+                العميل:
+                <t t-if="o.partner_id">
+                    <span class="mr-2" t-field="o.partner_id"/>
+                </t>
+                <t t-else="">
+                    <span class="mr-2">-------------</span>
+                </t>
+            </p>
+            <p>
+                مرجع العميل:
+                <t t-if="o.reference">
+                    <span class="mr-2" t-field="o.reference"/>
+                </t>
+                <t t-else="">
+                    <span class="mr-2">-------------</span>
+                </t>
+            </p>
+            <p>
+                تاريخ الفاتوره:
+                <t t-if="o.date_invoice">
+                    <span class="mr-2" t-field="o.date_invoice"/>
+                </t>
+                <t t-else="">
+                    <span class="mr-2">-------------</span>
+                </t>
+            </p>
+            <p>
+                تاريخ الاستحقاق:
+                <t t-if="o.date_due">
+                    <span class="mr-2" t-field="o.date_due"/>
+                </t>
+                <t t-else="">
+                    <span class="mr-2">-------------</span>
+                </t>
+            </p>
+        </template>
+
+    </data>
+</odoo>

@@ -1,0 +1,108 @@
+<odoo>
+    <data>
+        <record id="edit_trans_date_groups" model="res.groups">
+            <field name="name">Edit Transaction Date</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+        <record id="po_ro" model="ir.ui.view">
+            <field name="name">PO RO</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <!--<xpath expr="//field[@name='date_order']" position="attributes">-->
+                <!--<attribute name="attrs">{'readonly': [('flag', '==', False)]}</attribute>-->
+                <!--</xpath>-->
+                <xpath expr="//field[@name='date_order']" position="replace">
+                    <field name="flag" invisible="1"/>
+                    <field name="date_order" attrs="{'readonly': [('flag', '==', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+        <!--bills-->
+        <record id="account_invoice_date" model="ir.ui.view">
+            <field name="name">account invoices Date</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <!--<xpath expr="//field[@name='date_order']" position="attributes">-->
+                <!--<attribute name="attrs">{'readonly': [('flag', '==', False)]}</attribute>-->
+                <!--</xpath>-->
+                <xpath expr="//field[@name='date_invoice']" position="replace">
+                    <field name="flag" invisible="1"/>
+                    <field name="date_invoice" string="Bill Date" options="{'datepicker': {'warn_future': true}}" attrs="{'readonly': [('flag', '==', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+        <!--invoices-->
+        <record id="account_invoice_bils_date" model="ir.ui.view">
+            <field name="name">account invoices Date</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_invoice']" position="replace">
+                    <field name="flag" invisible="1"/>
+                    <field name="date_invoice" options="{'datepicker': {'warn_future': true}}" attrs="{'readonly': [('flag', '==', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+        <!--progress_invoices-->
+        <record id="account_progress_invoice_date" model="ir.ui.view">
+            <field name="name">account invoices Date</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="progress_invoice.invoice_progress_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_invoice']" position="replace">
+                    <field name="flag" invisible="1"/>
+                    <field name="date_invoice" string="Bill Date" options="{'datepicker': {'warn_future': true}}" attrs="{'readonly': [('flag', '==', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+        <!--journal-->
+        <record id="account_journal_date" model="ir.ui.view">
+            <field name="name">account move Date</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <!--<xpath expr="//field[@name='date_order']" position="attributes">-->
+                <!--<attribute name="attrs">{'readonly': [('flag', '==', False)]}</attribute>-->
+                <!--</xpath>-->
+                <xpath expr="//field[@name='date']" position="replace">
+                    <field name="flag" invisible="1"/>
+                    <field name="date" attrs="{'readonly': [('flag', '==', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+        <!--analtyc entry-->
+        <record id="account_analytic_date" model="ir.ui.view">
+            <field name="name">account analytic line Date</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_form"/>
+            <field name="arch" type="xml">
+                <!--<xpath expr="//field[@name='date_order']" position="attributes">-->
+                <!--<attribute name="attrs">{'readonly': [('flag', '==', False)]}</attribute>-->
+                <!--</xpath>-->
+                <xpath expr="//field[@name='date']" position="replace">
+                    <field name="flag" invisible="1"/>
+                    <field name="date" attrs="{'readonly': [('flag', '==', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+        <!--payment-->
+        <record id="account_payment_trans_date" model="ir.ui.view">
+            <field name="name">payment date Date</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <!--<xpath expr="//field[@name='date_order']" position="attributes">-->
+                <!--<attribute name="attrs">{'readonly': [('flag', '==', False)]}</attribute>-->
+                <!--</xpath>-->
+                <xpath expr="//field[@name='payment_date']" position="replace">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <field name="flag" invisible="1"/>
+                    <field name="payment_date" attrs="{'readonly': ['|',('flag', '==', False),('state', '!=', 'draft')]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

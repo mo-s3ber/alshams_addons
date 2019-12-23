@@ -1,0 +1,62 @@
+<odoo>
+    <data>
+        <!--<record model="ir.sequence.type" id="seq_type_inter_id">-->
+        <!--<field name="name">Internal reference</field>-->
+        <!--<field name="code">product.template</field>-->
+        <!--</record>-->
+        <!--<record model="ir.sequence" id="seq_inter_id">-->
+        <!--<field name="name">Internal reference</field>-->
+        <!--<field name="code">product.template</field>-->
+        <!--<field name="prefix"></field>-->
+        <!--<field name="padding">3</field>-->
+        <!--</record>-->
+
+        <record id="seq_inter_ref" model="ir.sequence">
+            <field name="name">omega_sequencer</field>
+            <field name="code">product.template</field>
+            <field name="prefix">CODE/</field>
+            <field name="padding">5</field>
+        </record>
+
+
+
+        <record id="custom_parnter_code_form_view" model="ir.ui.view">
+            <field name="name">Partner Code</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='ref']" position="attributes">
+                    <attribute name="string">Partner Code</attribute>
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="seq_partner_code_ref" model="ir.sequence">
+            <field name="name">partner_sequencer</field>
+            <field name="code">res.partner</field>
+            <field name="prefix"></field>
+            <field name="padding">5</field>
+        </record>
+
+        <record id="custom_congirm_approval_cyc_form_view" model="ir.ui.view">
+            <field name="name">confirm button approval</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="replace">
+                   <field name="state" widget="statusbar" statusbar_visible="draft,wait,approved,sent,purchase" readonly="1"/>
+                </xpath>
+                <xpath expr="//button[@id='draft_confirm']" position="replace">
+                    <!--<button name="button_confirm" states="approved" type="object" string="Confirm Order" class="oe_highlight" id="bid_confirm" attrs="{'invisible': [('state', '!=', 'approved')]}"/>-->
+                    <button name="button_confirm" type="object" states="approved" string="Confirm Order" id="draft_confirm"/>
+                </xpath>
+                <xpath expr="//button[@name='action_rfq_send']" position="before">
+                    <button name="action_submit" type="object" states="draft" string="Submit" class="oe_highlight"/>
+                    <button name="action_approve" type="object" states="wait" string="Approve RFQ" class="oe_highlight"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

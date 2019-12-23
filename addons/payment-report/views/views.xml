@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="vendor_payment">
+        <t t-call="web.external_layout_standard">
+            <t t-set="company" t-value="o.company_id"/>
+
+            <t t-set="o" t-value="o.with_context()"/>
+            <div class="page">
+                <div class="text-left" t-if="o.amount">
+                    <span t-field="o.amount" t-options="{'widget': 'monetary'}"/>
+                    <span dir="rtl">
+                        <strong class="ml-3">المبلغ:</strong>
+                    </span>
+
+                </div>
+                <h3 class="text-right text-center">
+                    <strong>إذن صرف نقدية</strong>
+                </h3>
+                <p t-field="o.name" class="text-right text-center"></p>
+                <div class="text-right">
+                    <div class="" t-if="o.payment_date">
+                        <strong class="ml-3">التاريخ :</strong>
+                        <span t-field="o.payment_date"/>
+                    </div>
+                </div>
+
+                <div class="text-right" dir="auto">
+                    <strong class="ml-3">يصرف ل</strong>
+                    <span t-field="o.partner_id.name"/>
+                </div>
+                <table class="table table-bordered border border-dark">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-right text-center border border-dark">التوجيه المحاسبي</th>
+                            <th scope="col" class="text-right text-center border border-dark">البيان</th>
+                            <th scope="col" class="text-right text-center border border-dark">المبلغ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-right border border-dark">
+                                <span t-field="o.name"/>
+                            </td>
+                            <td class="text-right border border-dark" dir="auto">
+                                <div class="text-right">
+                                        <div class="row">
+                                            <span class="mr-2">المشروع</span>
+                                        </div>
+                                        <div class="row">
+                                            <span class="mr-2" t-field="o.analytic_account"></span>
+                                        </div>
+                                    </div>
+                            </td>
+                            <td class="text-right border border-dark">
+                                <span t-field="o.amount" t-options="{'widget': 'monetary'}"/>
+                            </td>
+                        </tr>
+                        <tr dir="auto">
+                            <td colspan="2" class="text-right border border-dark">
+                                <span t-if="o.currency_id" t-esc="o.currency_id.amount_to_text(o.amount)"/>
+                                <span dir="rtl">فقط وقدره :</span>
+                            </td>
+
+                            <td class="text-right  border border-dark">
+                                <span t-field="o.amount" t-options="{'widget': 'monetary'}"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered  border border-dark">
+                    <tbody>
+                        <tr>
+                            <td class="text-right  border border-dark">
+                                <div class="row">
+                                    <div class="col-4 text-center">
+                                        <div class="row">
+                                            <div class="col">المستلم</div>
+                                            <div class="col"></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">---------</div>
+                                            <div class="col">اﻻسم والتوقيع</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">---------</div>
+                                            <div class="col">رقم البطاقه</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <p>‫استلمت انا المبلغ الموضح بعاليه</p>
+                                        <br/>
+                                        <p>doc_id :
+                                            <span t-field="o.id"/>
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-right text-center" dir="auto">
+                    <span class="ml-2">منشا بواسطه</span>
+
+                    <span class="ml-2">
+                        <span t-field="o.create_uid"></span>
+                    </span>
+
+                    <span class="ml-2">في</span>
+
+                    <span class="ml-2">
+                        <span t-field="o.create_date"></span>
+                    </span>
+                    <span class="ml-2">
+                        أخر تحديث
+                    </span>
+                    <span class="ml-2">
+                        <span t-field="o.write_uid"></span>
+                    </span>
+                    <span class="ml-2">في</span>
+                    <span class="ml-2">
+                        <span t-field="o.write_date"></span>
+                    </span>
+                </p>
+            </div>
+        </t>
+    </template>
+    <template id="customer_payment">
+
+        <span class="border border-dark ">
+            <t t-call="web.external_layout_standard">
+                <t t-set="company" t-value="o.company_id"/>
+
+                <t t-set="o" t-value="o.with_context()"/>
+                <div class="page">
+                    <div class="text-left" t-if="o.amount">
+                        <span t-field="o.amount" t-options="{'widget': 'monetary'}"/>
+                        <span dir="rtl">
+                            <strong class="ml-3">المبلغ:</strong>
+                        </span>
+
+                    </div>
+                    <h3 class="text-right text-center">
+                        <strong>إذن توريد شيكات نقديه</strong>
+                        <br/>
+                        <span t-field="o.communication"/>
+                    </h3>
+                    <p t-field="o.name" class="text-right text-center"></p>
+                    <div class="text-right">
+                        <div class="" t-if="o.payment_date">
+                            <strong class="ml-3">التاريخ :</strong>
+                            <span t-field="o.payment_date"/>
+                        </div>
+                    </div>
+
+                    <div class="text-right">
+                        <strong class="ml-3">إستلمت من :</strong>
+                        <span t-field="o.partner_id.name"/>
+                    </div>
+
+
+                    <div class="text-right" dir="auto">
+                        <div class="row">
+                            <div class="col-8">
+                                <strong>نقدا / الشيك رقم :</strong>
+                                <span t-field="o.analytic_account"/>
+                            </div>
+                            <div class="col-4">
+                                <strong class="ml-3">المودع في البنك :</strong>
+                                <span t-field="o.journal_id.name"/>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="text-right" dir="auto">
+                        <strong class="ml-3">تاريخ اﻻستحقاق :</strong>
+                        <span t-field="o.payment_date"/>
+
+                    </div>
+                    <br/>
+
+                    <table class="table table-bordered border border-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-right text-center border border-dark">التوجيه المحاسبي</th>
+                                <th scope="col" class="text-right text-center border border-dark">البيان</th>
+                                <th scope="col" class="text-right text-center border border-dark">المبلغ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-right border border-dark">
+                                    <span t-field="o.communication"/>
+                                    <span t-field="o.name"/>
+                                </td>
+                                <td class="text-right border border-dark" dir="auto">
+                                    <div class="text-right">
+                                        <div class="row">
+                                            <span class="mr-2">المشروع</span>
+                                        </div>
+                                        <div class="row">
+                                            <span class="mr-2" t-field="o.analytic_account"></span>
+                                        </div>
+                                    </div>
+
+                                </td>
+                                <td class="text-right border border-dark">
+                                    <span t-field="o.amount" t-options="{'widget': 'monetary'}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-right border border-dark">
+                                    <span t-if="o.currency_id" t-esc="o.currency_id.amount_to_text(o.amount)"/>
+                                    <span dir="rtl">فقط وقدره :</span>
+                                </td>
+
+                                <td class="text-right border border-dark">
+                                    <span t-field="o.amount" t-options="{'widget': 'monetary'}"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+
+                    <div dir="auto">
+                        <div class="row text-right" dir="auto">
+                            <div class="col-8">
+                                أمين الخزينة:
+                                ---------------------
+                            </div>
+                            <div class="col-4">
+                                يعتمد المدير المالى: -----------
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <table class="table table-bordered  border border-dark">
+                    <tbody>
+                        <tr>
+                            <td class="text-right  border border-dark">
+                                <div class="row" dir="auto">
+                                    <div class="col">
+                                        ‫اﻻصل العميل :
+                                        (doc_id :
+                                        <span t-field="o.id"/>)
+                                    </div>
+                                    <div class="col">
+                                        صورة: اﻻداره الماليه
+                                        (doc_id :
+                                        <span t-field="o.id"/>)
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-right text-center" dir="auto">
+                    <span class="ml-2">منشا بواسطه</span>
+
+                    <span class="ml-2">
+                        <span t-field="o.create_uid"></span>
+                    </span>
+
+                    <span class="ml-2">في</span>
+
+                    <span class="ml-2">
+                        <span t-field="o.create_date"></span>
+                    </span>
+                    <span class="ml-2">
+                        أخر تحديث
+                    </span>
+                    <span class="ml-2">
+                        <span t-field="o.write_uid"></span>
+                    </span>
+                    <span class="ml-2">في</span>
+                    <span class="ml-2">
+                        <span t-field="o.write_date"></span>
+                    </span>
+                </div>
+            </t>
+        </span>
+    </template>
+    <template id="no_partner_payment">
+        <t t-call="web.external_layout_standard">
+            <t t-set="company" t-value="o.company_id"/>
+
+            <t t-set="o" t-value="o.with_context()"/>
+            <div class="page">
+                <div class="text-left" t-if="o.amount">
+                    <span t-field="o.amount" t-options="{'widget': 'monetary'}"/>
+                    <span dir="rtl">
+                        <strong class="ml-3">المبلغ:</strong>
+                    </span>
+
+                </div>
+                <h3 class="text-right text-center">
+                    <strong>إذن صرف نقدية</strong>
+                </h3>
+                <p t-field="o.name" class="text-right text-center"></p>
+                <div class="text-right">
+                    <div class="" t-if="o.payment_date">
+                        <strong class="ml-3">التاريخ :</strong>
+                        <span t-field="o.payment_date"/>
+                    </div>
+                </div>
+
+                <div class="text-right" dir="auto">
+                    <strong class="ml-3">يصرف ل</strong>
+                    <span t-field="o.destination_journal_id.name"/>
+                </div>
+                <table class="table table-bordered border border-dark">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-right text-center border border-dark">التوجيه المحاسبي</th>
+                            <th scope="col" class="text-right text-center border border-dark">البيان</th>
+                            <th scope="col" class="text-right text-center border border-dark">المبلغ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-right border border-dark">
+                                <span t-field="o.name"/>
+                            </td>
+                            <td class="text-right border border-dark" dir="auto">
+                                <div class="text-right">
+                                        <div class="row">
+                                            <span class="mr-2">المشروع</span>
+                                        </div>
+                                        <div class="row">
+                                            <span class="mr-2" t-field="o.analytic_account"></span>
+                                        </div>
+                                    </div>
+                            </td>
+                            <td class="text-right border border-dark">
+                                <span t-field="o.amount" t-options="{'widget': 'monetary'}"/>
+                            </td>
+                        </tr>
+                        <tr dir="auto">
+                            <td colspan="2" class="text-right border border-dark">
+                                <span t-if="o.currency_id" t-esc="o.currency_id.amount_to_text(o.amount)"/>
+                                <span dir="rtl">فقط وقدره :</span>
+                            </td>
+
+                            <td class="text-right  border border-dark">
+                                <span t-field="o.amount" t-options="{'widget': 'monetary'}"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered  border border-dark">
+                    <tbody>
+                        <tr>
+                            <td class="text-right  border border-dark">
+                                <div class="row">
+                                    <div class="col-4 text-center">
+                                        <div class="row">
+                                            <div class="col">المستلم</div>
+                                            <div class="col"></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">---------</div>
+                                            <div class="col">اﻻسم والتوقيع</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">---------</div>
+                                            <div class="col">رقم البطاقه</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <p>‫استلمت انا المبلغ الموضح بعاليه</p>
+                                        <br/>
+                                        <p>doc_id :
+                                            <span t-field="o.id"/>
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-right text-center" dir="auto">
+                    <span class="ml-2">منشا بواسطه</span>
+
+                    <span class="ml-2">
+                        <span t-field="o.create_uid"></span>
+                    </span>
+
+                    <span class="ml-2">في</span>
+
+                    <span class="ml-2">
+                        <span t-field="o.create_date"></span>
+                    </span>
+                    <span class="ml-2">
+                        أخر تحديث
+                    </span>
+                    <span class="ml-2">
+                        <span t-field="o.write_uid"></span>
+                    </span>
+                    <span class="ml-2">في</span>
+                    <span class="ml-2">
+                        <span t-field="o.write_date"></span>
+                    </span>
+                </p>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_payment_receipt_vendor">
+
+        <t t-call="web.html_container">
+
+            <t t-foreach="docs" t-as="o">
+                <t t-if="o.partner_type">
+                    <t t-if="o.partner_type =='supplier'">
+                        <t t-call="payment-report.vendor_payment" t-lang="lang"/>
+
+                    </t>
+                    <t t-if="o.partner_type == 'customer'">
+                        <t t-call="payment-report.customer_payment" t-lang="lang"/>
+                    </t>
+                </t>
+                <t t-else="">
+                    <t t-call="payment-report.no_partner_payment" t-lang="lang"/>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

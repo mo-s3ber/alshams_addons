@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_frontend" inherit_id="web.assets_frontend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/treasury_statement_report/static/src/css/style.css"/>
+            </xpath>
+        </template>
+        <template id='log_line'>
+            <div class="text-right text-center" dir="auto">
+                <span class="ml-2">منشا بواسطه</span>
+
+                <span class="ml-2">
+                    <span t-field="o.create_uid"/>
+                </span>
+                <span class="ml-2">في</span>
+
+                <span class="ml-2">
+                    <span t-field="o.create_date"/>
+                </span>
+                <span class="ml-2">
+                    أخر تحديث
+                </span>
+                <span class="ml-2">
+                    <span t-field="o.write_uid"/>
+                </span>
+                <span class="ml-2">في</span>
+                <span class="ml-2">
+                    <span t-field="o.write_date"/>
+                </span>
+            </div>
+
+            <span>doc_id :
+                <span t-field="o.id"/>
+            </span>
+        </template>
+
+        <template id="statement_movements">
+            <div class="text-center">
+                <h3>بيان الحركات</h3>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="border border-dark" colspan="4">رصيد أول المدة</td>
+                            <td class="border border-dark">
+                                <span dir="ltr" t-field="o.balance_start"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="border border-dark">التاريخ</td>
+                            <td class="border border-dark">البيان</td>
+                            <td class="border border-dark">المرجع</td>
+                            <td class="border border-dark">الشريك</td>
+                            <td class="border border-dark">المبلغ</td>
+                        </tr>
+                        <t t-foreach="o.line_ids" t-as="line">
+                            <tr>
+                                <td class="border border-dark">
+                                    <span t-field="line.date"/>
+                                </td>
+                                <td class="border border-dark">
+                                    <span t-field="line.name"/>
+                                </td>
+                                <td class="border border-dark">
+                                    <span t-field="line.ref"/>
+                                </td>
+                                <td class="border border-dark">
+                                    <span t-field="line.partner_id"/>
+                                </td>
+                                <td class="border border-dark">
+                                    <span dir="ltr" t-field="line.amount"/>
+                                </td>
+                            </tr>
+                        </t>
+                        <tr>
+                            <td class="border border-dark" colspan="4">رصيد نهاية المدة</td>
+                            <td class="border border-dark">
+                                <span dir="ltr" t-field="o.balance_end_real"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+
+        <template id="daily_register">
+            <div class="text-center">
+                <h3>قيد اليومية</h3>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="border border-dark">البيان</td>
+                            <td class="border border-dark">الجهة</td>
+                            <td class="border border-dark">الحساب</td>
+                            <td class="border border-dark">المشروع</td>
+                            <td class="border border-dark">القيد</td>
+                            <td class="border border-dark">مدين</td>
+                            <td class="border border-dark">دائن</td>
+                        </tr>
+                        <t t-set="total_debit" t-value="0"/>
+                        <t t-set="total_credit" t-value="0"/>
+
+                        <t t-foreach="o.line_ids" t-as="line_id">
+
+                            <t t-foreach="line_id.journal_entry_ids" t-as="journal_entry_id">
+                                <tr>
+                                    <td class="border border-dark">
+                                        <span t-field="journal_entry_id.name"/>
+                                    </td>
+                                    <td class="border border-dark">
+                                        <span t-field="journal_entry_id.partner_id"/>
+                                    </td>
+                                    <td class="border border-dark">
+                                        <span t-field="journal_entry_id.account_id"/>
+                                    </td>
+                                    <td class="border border-dark">
+                                    </td>
+                                    <td class="border border-dark">
+                                        <span t-field="journal_entry_id.move_id"/>
+                                    </td>
+                                    <td class="border border-dark">
+                                        <t t-if="journal_entry_id.debit">
+                                            <span dir="ltr" t-field="journal_entry_id.debit"/>
+                                            <t t-set="total_debit" t-value="total_debit+journal_entry_id.debit"/>
+                                        </t>
+                                    </td>
+                                    <td class="border border-dark">
+                                        <t t-if="journal_entry_id.credit">
+                                            <span dir="ltr" t-field="journal_entry_id.credit"/>
+                                            <t t-set="total_credit" t-value="total_credit+journal_entry_id.credit"/>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                        <tr>
+                            <td colspan="5" class="border border-dark"></td>
+                            <td class="border border-dark">
+                                <span dir="ltr" t-esc="total_debit"/>
+                            </td>
+                            <td class="border border-dark">
+                                <span dir="ltr" t-esc="total_credit"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+
+        <template id="review_table">
+            <div>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="border border-dark">محاسب</td>
+                            <td class="border border-dark">مراجعة</td>
+                            <td class="border border-dark">المدير المالي</td>
+                        </tr>
+
+                        <tr>
+                            <td class="border border-dark">
+                                <span t-field="o.create_uid"/>
+                            </td>
+                            <td class="border border-dark"></td>
+                            <td class="border border-dark"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+
+
+        <template id="treasury_statement_view">
+            <t t-call="web.external_layout_standard">
+                <t t-set="company" t-value="o.company_id"/>
+                <t t-set="o" t-value="o.with_context()"/>
+                <div class="page text-center" dir="auto">
+                    <h3>كشف خزينة رقم
+                        <span t-field="o.name"/>
+                    </h3>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="border border-dark">اليومية</td>
+                                <td class="border border-dark">
+                                    <span t-field="o.journal_id"/>
+                                </td>
+                                <td class="border border-dark">التاريخ</td>
+                                <td class="border border-dark">
+                                    <span t-field="o.date"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border border-dark">الفرع</td>
+                                <td class="border border-dark">
+                                    <span t-field="o.company_id"/>
+                                </td>
+                                <td class="border border-dark">الفترة</td>
+                                <td class="border border-dark">
+                                    <span t-field="o.date"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <span t-call="treasury_statement_report.statement_movements"/>
+                    <span t-call="treasury_statement_report.daily_register"/>
+                    <span t-call="treasury_statement_report.review_table"/>
+                    <span t-call="treasury_statement_report.log_line"/>
+                </div>
+            </t>
+        </template>
+        <template id="treasury_statement_template">
+
+            <t t-call="web.html_container">
+
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="treasury_statement_report.treasury_statement_view"/>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

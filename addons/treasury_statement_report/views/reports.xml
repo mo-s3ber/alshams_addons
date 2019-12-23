@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="treasury_statement_report"
+                model="account.bank.statement"
+                string="Treasury Statement Arabic"
+                report_type="qweb-pdf"
+                name="treasury_statement_report.treasury_statement_template"
+                file="treasury_statement_report.treasury_statement_template_"
+                menu="True"
+        />
+    </data>
+</odoo>

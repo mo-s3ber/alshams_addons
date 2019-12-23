@@ -1,0 +1,11 @@
+<odoo>
+    <data>
+        <record id="guarantee_sequence" model="ir.sequence">
+            <field name="name">Guarantee Sequence</field>
+            <field name="padding">4</field>
+            <field name="prefix">LG/%(year)s/</field>
+            <field name="code">letter.guarantee</field>
+            <field name="implementation">no_gap</field>
+        </record>
+    </data>
+</odoo>

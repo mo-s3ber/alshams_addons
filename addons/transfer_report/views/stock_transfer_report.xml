@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_report_transfer_stock"
+                model="stock.picking"
+                string="stock Arabic Report"
+                report_type="qweb-pdf"
+                name="transfer_report.transfer_report_stock"
+                file="transfer_report.transfer_report_stock"
+                menu="True"
+                print_report_name="'transfer Operations - %s - %s' % (object.partner_id.name or '', object.name)"
+
+        />
+    </data>
+</odoo>
+

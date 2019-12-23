@@ -1,0 +1,81 @@
+<odoo>
+  <data>
+   <record id="location_account_form_view" model="ir.ui.view">
+            <field name="name">location account</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref="stock.view_location_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='return_location']" position="after">
+                   <field name="location_account"/>
+                </xpath>
+            </field>
+   </record>
+
+   <record id="custom_related_stock_picking_form_view" model="ir.ui.view">
+            <field name="name">customstock picking</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='location_id']" position="replace">
+                    <field name="location_id" groups="stock.group_stock_multi_locations"
+                           attrs="{'invisible': [('is_internal_operation','!=', True)]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='picking_type_id']" position="after">
+                   <field name="related_operation" invisible="1"/>
+                </xpath>
+
+                <!--<xpath expr="//field[@name='picking_type_id']" position="after">-->
+                   <!--<field name="related_operation" invisible="1"/>-->
+                <!--</xpath>-->
+
+                <xpath expr="//field[@name='origin']" position="attributes">
+                   <attribute name="attrs">{'invisible': [('related_operation', '!=', 'internal')]}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='origin']" position="after">
+                   <field name="origin1" attrs="{'invisible':[('related_operation','!=','incoming')]}"/>
+                   <field name="origin2" attrs="{'invisible':[('related_operation','!=','outgoing')]}"/>
+                    <field name="is_internal_operation" invisible="1"/>
+                    <field name="picking_type_id2" attrs="{'invisible': [('is_internal_operation','!=', True)]}"/>
+                    <field name="source_operation" attrs="{'invisible': [('is_internal_operation','!=', True)]}"/>
+                    <field name="source_transfer" attrs="{'invisible': [('is_internal_operation','!=', True)]}"/>
+
+                </xpath>
+            </field>
+   </record>
+
+  <record id="custom_related_stock_moves_form_view" model="ir.ui.view">
+            <field name="name">customstock move</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="after">
+                   <field name="related_operation" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='origin']" position="attributes">
+                   <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='origin']" position="after">
+                   <field name="origin1" attrs="{'invisible':[('related_operation','!=','incoming')]}"/>
+                   <field name="origin2" attrs="{'invisible':[('related_operation','!=','outgoing')]}"/>
+                </xpath>
+            </field>
+  </record>
+
+      <record id="custom_view_picking_type_form" model="ir.ui.view">
+          <field name="name">stock.picking.type.customform</field>
+          <field name="model">stock.picking.type</field>
+          <field name="inherit_id" ref="stock.view_picking_type_form"/>
+          <field name="arch" type="xml">
+
+              <xpath expr="//field[@name='show_reserved']" position="after">
+                  <field name="is_internal_operation"/>
+              </xpath>
+
+          </field>
+      </record>
+
+  </data>
+</odoo>

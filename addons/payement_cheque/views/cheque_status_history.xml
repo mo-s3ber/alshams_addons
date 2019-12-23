@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_cheques_status_history" model="ir.ui.view">
+        <field name="name">Cheque Report</field>
+        <field name="model">account.batch.deposit.history</field>
+        <field name="arch" type="xml">
+            <form string="Choose your date">
+                <group>
+                    <group>
+                        <field name="compute_at_date" widget="radio"/>
+                        <field name="date" attrs="{'invisible': [('compute_at_date', '=', 0)]}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="%(payement_cheque.report_deposit_tree_action)d" string="Retrieve Cheques" type="action" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_cheques_status_history" model="ir.actions.act_window">
+        <field name="name">Cheque Report</field>
+        <field name="res_model">account.batch.deposit.history</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_cheques_status_history"/>
+        <field name="target">new</field>
+        <field name="context">{'default_compute_at_date': 0}</field>
+    </record>
+<!--     <menuitem id="menu_valuation" name="Inventory" parent="stock.menu_warehouse_report" sequence="100" action="action_stock_quantity_history"/> -->
+<menuitem action='action_cheques_status_history' id="cheques_report_menu" name="Cheques Report" parent="account.menu_finance_reports" sequence="10"/>
+</odoo>
+

@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_move_candidate_user,stock.move.candidate.user,inventory_valuation_per_location.model_stock_move_candidate,,1,1,1,0

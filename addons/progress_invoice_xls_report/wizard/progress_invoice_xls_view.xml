@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_xls_report_wizard" model="ir.ui.view">
+        <field name="name">account.invoice.report.wizard</field>
+        <field name="model">progressinvoice.report</field>
+        <field name="arch" type="xml">
+            <form string="Excel Report">
+                <field name="state" invisible="1"/>
+                <div states="get">
+                    <group>
+                        <field name="progress_invoice_data" colspan="4" invisible="1"/>
+                        <field name="file_name" filename="progress_invoice_data" colspan="4"/>
+                    </group>
+                </div>
+                <div states="choose">
+                    <group>
+                        <!--                        <group>-->
+                        <!--                            <field name="start_date"/>-->
+                        <!--                        </group>-->
+                        <!--                        <group>-->
+                        <!--                            <field name="end_date"/>-->
+                        <!--                        </group>-->
+                        <!--                            <group>-->
+                        <!--                                <field name="order_state"/>-->
+                        <!--                            </group>-->
+                        <!--                            <group>-->
+                        <!--                                <field name="user_id" options="{'no_create': True}"/>-->
+                        <!--                            </group>-->
+                    </group>
+                </div>
+                <footer states="choose">
+                    <button string="Generate Report"
+                            class="btn-primary"
+                            name="action_progress_invoice_report"
+                            type="object"/>
+                    <button string="Cancel"
+                            class="btn-default"
+                            special="cancel"/>
+                </footer>
+                <footer states="get">
+                    <button special="cancel" string="Cancel" class="oe_highlight"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_sale_order_xls" model="ir.actions.act_window">
+        <field name="name">Financial Procurement Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">progressinvoice.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="sale_order_xls_report_wizard"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="account_reports_financial_procurement_report_menu" name="Financial Procurement Report" parent="account.menu_finance_reports"
+              sequence="5"/>
+
+    <menuitem name="Financial Procurement Report" id="financial_procurement_report_child_menu"
+              parent="account_reports_financial_procurement_report_menu" sequence="1" action="action_view_sale_order_xls"/>
+</odoo>

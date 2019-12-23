@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template id="template" xml:space="preserve">
+    <t t-extend="ListView.buttons">
+                <t t-jquery="button.oe_list_add" t-operation="after">
+                        <button t-if="widget.model == 'stock.move.line'"  class="oe_button oe_new_button oe_highlight" type="button">NON Mov</button>
+        </t>
+    </t>
+</template>

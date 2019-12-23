@@ -1,0 +1,4 @@
+id,name,report_id:id
+report_stock_column1,Product,ms_report_stock
+report_stock_column2,Location,ms_report_stock
+report_stock_column3,Qty,ms_report_stock

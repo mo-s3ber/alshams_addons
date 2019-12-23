@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_report_payment_vendor"
+                model="account.payment"
+                string="Payment Arabic"
+                report_type="qweb-pdf"
+                name="payment-report.report_payment_receipt_vendor"
+                file="payment-report.report_payment_receipt_vendor"
+                menu="True"
+        />
+    </data>
+</odoo>

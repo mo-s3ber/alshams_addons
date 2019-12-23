@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+        <record id="custom_code_seq_view" model="ir.ui.view">
+            <field name="name">Code Seq</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="after">
+                    <field name="code"/>
+                </xpath>
+            </field>
+        </record>
+
+
+
+        <record id="custom_tax_view_view" model="ir.ui.view">
+            <field name="name">TAxes</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="after">
+                    <field name="tax_file"/>
+                    <field name="tax_department"/>
+                    <field name="national_id" string="National Number"/>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

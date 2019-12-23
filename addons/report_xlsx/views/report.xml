@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--
+    © 2017 Creu Blanca
+    License AGPL-3.0 or later (https://www.gnuorg/licenses/agpl.html).
+
+    attachment_use="False"
+    -->
+    <!--<report-->
+        <!--id="order_xlsx"-->
+        <!--model="sale.order"-->
+        <!--string="Print to XLSX"-->
+        <!--report_type="xlsx"-->
+        <!--name="report_xlsx.order_xlsx"-->
+        <!--file="res_order"-->
+
+    <!--/>-->
+</odoo>

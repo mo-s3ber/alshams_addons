@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="jornal_entry_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page" dir="rtl">
+                            <h1 class="text-center">قيد يومية</h1>
+                            <br/>
+                            <table class="table table-borderless">
+                                <tbody>
+                                    <tr class="text-right">
+                                        <td>
+                                            التاريخ:
+                                        </td>
+                                        <td>
+                                            <span class="mr-2" t-field="o.date"/>
+                                        </td>
+                                        <td>
+                                            المرجع:
+
+                                        </td>
+                                        <td>
+                                            <t t-if="o.ref">
+                                                <span class="mr-2" t-field="o.ref"/>
+                                            </t>
+                                            <t t-esle="">
+                                                <span class="mr-2">------------------</span>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                    <tr class="text-right">
+                                        <td>
+                                            رقم القيد:
+
+                                        </td>
+                                        <td>
+                                            <span class="mr-2" t-field="o.name"/>
+                                        </td>
+                                        <td>
+                                            يومية:
+                                        </td>
+                                        <td>
+                                            <span class="mr-2" t-field="o.journal_id"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <table class="table table-bordered" border="2">
+                                <col width="30%" />
+                                <col width="20%" />
+                                <col width="10%" />
+                                <col width="10%" />
+                                <col width="10%" />
+                                <col width="20%" />
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">اسم</th>
+                                        <th class="text-center">شريك</th>
+                                        <th class="text-center">حساب</th>
+                                        <th class="text-center">مدين</th>
+                                        <th class="text-center">دائن</th>
+                                        <th class="text-center">حساب تحليلي</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o._custom_report_lines()" t-as="line">
+                                        <tr>
+                                            <td class="text-center">
+                                                <span t-esc="line_value['name']"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-esc="line_value['partner_id']"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-esc="line_value['account_id']"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-esc="line_value['debit']"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-esc="line_value['credit']"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-esc="line_value['analytic_account_id']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <table class="table table-bordered" border="2">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">محاسب</th>
+                                        <th class="text-center">مراجعة</th>
+                                        <th class="text-center">مدير مالي</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center">
+                                            -----------------------
+                                        </td>
+                                        <td class="text-center">
+                                            -----------------------
+                                        </td>
+                                        <td class="text-center">
+                                            -----------------------
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <t t-call="purchase_subconntract_reports.log_line"/>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+        <template id='log_line'>
+            <br/>
+            <br/>
+            <div class="text-right text-center" dir="auto">
+                <span class="ml-2">منشا بواسطه</span>
+
+                <span class="ml-2">
+                    <span t-field="o.create_uid"/>
+                </span>
+                <span class="ml-2">في</span>
+
+                <span class="ml-2">
+                    <span t-field="o.create_date"/>
+                </span>
+                <span class="ml-2">
+                    أخر تحديث
+                </span>
+                <span class="ml-2">
+                    <span t-field="o.write_uid"/>
+                </span>
+                <span class="ml-2">في</span>
+                <span class="ml-2">
+                    <span t-field="o.write_date"/>
+                </span>
+            </div>
+        </template>
+    </data>
+</odoo>
