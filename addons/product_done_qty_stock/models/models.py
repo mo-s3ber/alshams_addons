@@ -8,14 +8,14 @@ class ProductDoneQtyStock(models.Model):
 
     done_qty_2 = fields.Float(compute='calculate_qty',digits=dp.get_precision('Product Unit of Measure'))
     my_partner = fields.Many2one('res.partner', compute='calc_partner')
-    source_doc = fields.Many2one('purchase.order', compute='calc_partner')
+    source_doc = fields.Many2one('purchase.order')
 
     @api.multi
     def calc_partner(self):
         for re in self:
             re.my_partner = re.picking_id.partner_id.id
-            if re.picking_id.origin1.id:
-                re.source_doc = re.picking_id.origin1.id
+            # if re.picking_id.origin1.id:
+            #     re.source_doc = re.picking_id.origin1.id
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
