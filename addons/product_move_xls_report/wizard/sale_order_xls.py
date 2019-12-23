@@ -106,7 +106,7 @@ class SaleOrderReport(models.TransientModel):
                 sheets.write(row + 1, count + 2, rec.product_id.name, format2)
                 sheets.write(row + 1, count + 3, rec.location_id.complete_name, format2)
                 sheets.write(row + 1, count + 4, rec.location_dest_id.complete_name, format2)
-                rec.calculate_qty(self.stock_location_id)
+                # rec.calculate_qty(self.stock_location_id)
 
                 # product_move[counter - 1].done_qty_2 = 0 done_quan = 0 if "INV" in rec.reference else print('No')
                 done_quan = 0 if counter == 0 else product_move[counter - 1].done_qty_2 + done_quan
