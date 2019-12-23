@@ -35,8 +35,8 @@
                 </xpath>
 
                 <xpath expr="//field[@name='origin']" position="after">
-                   <field name="origin1" attrs="{'invisible':[('related_operation','!=','incoming')]}"/>
-                   <field name="origin2" attrs="{'invisible':[('related_operation','!=','outgoing')]}"/>
+<!--                   <field name="origin1" attrs="{'invisible':[('related_operation','!=','incoming')]}"/>-->
+<!--                   <field name="origin2" attrs="{'invisible':[('related_operation','!=','outgoing')]}"/>-->
                     <field name="is_internal_operation" invisible="1"/>
                     <field name="picking_type_id2" attrs="{'invisible': [('is_internal_operation','!=', True)]}"/>
                     <field name="source_operation" attrs="{'invisible': [('is_internal_operation','!=', True)]}"/>
@@ -58,8 +58,8 @@
                    <attribute name="invisible">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='origin']" position="after">
-                   <field name="origin1" attrs="{'invisible':[('related_operation','!=','incoming')]}"/>
-                   <field name="origin2" attrs="{'invisible':[('related_operation','!=','outgoing')]}"/>
+<!--                   <field name="origin1" attrs="{'invisible':[('related_operation','!=','incoming')]}"/>-->
+<!--                   <field name="origin2" attrs="{'invisible':[('related_operation','!=','outgoing')]}"/>-->
                 </xpath>
             </field>
   </record>
