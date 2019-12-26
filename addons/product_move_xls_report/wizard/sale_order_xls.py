@@ -118,19 +118,19 @@ class SaleOrderReport(models.TransientModel):
                 # else:
                 #     test = rec.done_qty_2 + done_quan
 
-                sheets.write(row + 1, count + 5, rec.done_qty_2, format2)
+                sheets.write(row + 1, count + 5, rec.qty_done, format2)
                 if "INV" in rec.reference:
                     sheets.write(row + 1, count + 6, "", format2)
                 else:
                     if wizard.stock_location_id.id == rec.location_id.id:
-                        sheets.write(row + 1, count + 6, round(rec.done_qty_2, 2), format2)
+                        sheets.write(row + 1, count + 6, round(rec.qty_done, 2), format2)
                     else:
                         sheets.write(row + 1, count + 6, '', format2)
                 if "INV" in rec.reference:
                     sheets.write(row + 1, count + 7, "", format2)
                 else:
                     if wizard.stock_location_id.id == rec.location_dest_id.id:
-                        sheets.write(row + 1, count + 7, round(rec.done_qty_2, 2), format2)
+                        sheets.write(row + 1, count + 7, round(rec.qty_done, 2), format2)
                     else:
                         sheets.write(row + 1, count + 7, '', format2)
                 # if "INV" in rec.reference:
@@ -140,7 +140,7 @@ class SaleOrderReport(models.TransientModel):
                     # print(rec.write_date)
                     sheets.write(row + 1, count + 8, self.env['stock.inventory.line'].search([('product_id','=',rec.product_id.id),('location_id','=',self.stock_location_id.id),('inventory_id','=',x)]).product_qty, format2)
                 else:
-                    sheets.write(row + 1, count + 8, rec.done_qty_2 + done_quan, format2)
+                    sheets.write(row + 1, count + 8, rec.qty_done + done_quan, format2)
                 # else:
                     # sheets.write(row + 1, count + 8, rec.done_qty_2 + done_quan, format2)
 
@@ -203,11 +203,11 @@ class ProductMoveLineInherit(models.Model):
             sheets.write(row + 1, count + 3, rec.location_id.name, format2)
             sheets.write(row + 1, count + 4, rec.location_dest_id.name, format2)
 
-            done_quan = 0 if counter == 0 else self[counter - 1].done_qty_2 + done_quan
+            done_quan = 0 if counter == 0 else self[counter - 1].done_qty + done_quan
             
             sheets.write(row + 1, count + 5, done_quan, format2)
-            sheets.write(row + 1, count + 6, rec.done_qty_2, format2)
-            sheets.write(row + 1, count + 7, rec.done_qty_2 + done_quan, format2)
+            sheets.write(row + 1, count + 6, rec.done_qty, format2)
+            sheets.write(row + 1, count + 7, rec.done_qty+ done_quan, format2)
 
             sheets.write(row + 1, count + 8, rec.my_partner.name, format2)
 
