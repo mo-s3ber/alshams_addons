@@ -98,10 +98,13 @@ class ProductMoveReport(models.TransientModel):
         if self.generate_data():
             for line in self.generate_data():
                 date = str(line.picking_id.date_done)
-                if date:
-                    worksheet.write(row, col,date , custom_format)
+                if date or line.date:
+                    if date:
+                        worksheet.write(row, col,date , custom_format)
+                    else:
+                        worksheet.write(row, col, str(line.date), custom_format)
                 else:
-                    worksheet.write(row, col, line.date, custom_format)
+                    worksheet.write(row, col, "", custom_format)
                 if line.reference:
                     worksheet.write(row, col+1, str(line.reference), custom_format)
                 else:
