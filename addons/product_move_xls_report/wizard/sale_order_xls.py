@@ -1,175 +1,138 @@
 # -*- coding: utf-8 -*-
 
-import xlwt
+from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import ValidationError
 import base64
-import calendar
-from io import StringIO
-from odoo import models, fields, api, _
-from odoo.exceptions import Warning
-from datetime import date
-import datetime
+import xlsxwriter
+import io
+from datetime import datetime, time, timedelta
+from dateutil.rrule import rrule, DAILY
+from functools import partial
+from itertools import chain
+from pytz import timezone, utc
+from datetime import datetime
 
 
-class SaleOrderReport(models.TransientModel):
+def is_int(n):
+    try:
+        float_n = float(n)
+        int_n = int(float_n)
+    except ValueError:
+        return False
+    else:
+        return float_n == int_n
+
+
+def is_float(n):
+    try:
+        float_n = float(n)
+    except ValueError:
+        return False
+    else:
+        return True
+
+class ProductMoveReport(models.TransientModel):
     _name = "sale.order.report"
 
-    location_id = fields.Many2one('stock.location', 'From')
     product_id = fields.Many2one('product.product')
     stock_location_id = fields.Many2one('stock.location', 'Stock Location')
-    loca_dest_id = fields.Many2one('stock.location', 'To')
-    start_date = fields.Date(string='Start Date', required=True, default=date.today().replace(day=1))
-    end_date = fields.Date(string="End Date", required=True, default=date.today().replace(
-        day=calendar.monthrange(date.today().year, date.today().month)[1]))
-    order_state = fields.Selection([
-        ('draft', 'Quotation'),
-        ('sent', 'Quotation Sent'),
-        ('sale', 'Sales Order'),
-        ('done', 'Locked'),
-        ('cancel', 'Cancelled'),
-    ], string='Status', default='draft', required=True)
-    user_id = fields.Many2one('res.users', string='Salesperson', default=lambda self: self.env.user, required=True)
-    sale_order_data = fields.Char('Name', size=256)
-    file_name = fields.Binary('Product Move Excel Report', readonly=True)
-    state = fields.Selection([('choose', 'choose'), ('get', 'get')],
-                             default='choose')
+    excel_sheet = fields.Binary('Download Report')
 
-    _sql_constraints = [
-        ('check', 'CHECK((start_date <= end_date))', "End date must be greater then start date")
-    ]
 
-    @api.multi
-    def chk_field(self):
-        if len(self._context.get('active_ids', [])) > 0:
-            self.chk_activ_ids = True
-        else:
-            self.chk_activ_ids = False
 
-    chk_activ_ids = fields.Boolean(compute='chk_field')
-
-    @api.multi
-    def action_sale_report(self):
-        context = self.env.context
-        # if context.get('location'):
-        #     print(context.get('location'))
-        # else:
-        #     print('NNNNo')
-        file = StringIO()
-        if len(self._context.get('active_ids', [])) > 0:
-            product_move = self.env['stock.move.line'].browse(self._context['active_ids'])
-        else:
-            wizard = self.env['sale.order.report'].browse(self.id)
-
+    def generate_data(self):
+        if self.product_id:
             stock_moves = self.env['stock.move'].search([('company_id', '=', self.env.user.company_id.id)])
             domain = [('move_id', 'in', stock_moves.ids), ('product_id', '=', self.product_id.id),
-                      ('state', '=', 'done'), '|', ('location_id', '=', wizard.stock_location_id.id),
-                      ('location_dest_id', '=', wizard.stock_location_id.id)]
+                      ('state', '=', 'done'), '|', ('location_id', '=', self.stock_location_id.id),
+                      ('location_dest_id', '=', self.stock_location_id.id)]
+            lines = self.env['stock.move.line'].search(domain)
+        return lines
 
-            product_move = self.env['stock.move.line'].search(domain)
+    @api.multi
+    def generate_report(self):
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output)
 
-        workbook = xlwt.Workbook()
-        sheets = workbook.add_sheet(str("Product Moves"))
-        if product_move:
-            row = 0
-            format2 = xlwt.easyxf('font:bold True;align: horiz left')
-            sheets.write(row, 0, 'Date', format2)
-            sheets.write(row, 1, 'Reference', format2)
-            sheets.write(row, 2, 'Product', format2)
-            sheets.write(row, 3, 'From', format2)
-            sheets.write(row, 4, 'To', format2)
-            sheets.write(row, 5, 'Done Qty2', format2)
-            sheets.write(row, 6, 'Out', format2)
-            sheets.write(row, 7, 'In', format2)
-            sheets.write(row, 8, 'Balance', format2)
-            sheets.write(row, 9, 'Partner', format2)
-            # sheets.write(row, 8, 'Quantity Done', format2)
-            # sheets.write(row, 9, 'Status', format2)
-            sheets.write(row, 10, 'Cost', format2)
+        custom_format = workbook.add_format({
+            'bold': 0,
+            'border': 1,
+            'align': 'center',
+            'valign': 'vcenter',
+            'text_wrap': True,
+            'font_size': 8,
+            'fg_color': 'white',
+        })
 
-            sheets.write(row, 11, 'Source Document', format2)
+        table_header_format = workbook.add_format({
+            'bold': 1,
+            'border': 2,
+            'align': 'center',
+            'text_wrap': True,
+            'font_size': 10,
+            'valign': 'vcenter',
+            'fg_color': '#d8d6d6'
+        })
 
-            for counter, rec in enumerate(product_move):
-                if rec.move_id.is_force_cost:
-                    cost = rec.move_id.price_unit
+        worksheet = workbook.add_worksheet('Moves')
+        worksheet.set_paper(9)
+        worksheet.set_portrait()
+        row = 0
+        worksheet.write(row, 0, 'Date', table_header_format)
+        worksheet.write(row, 1, 'Reference', table_header_format)
+        worksheet.write(row, 2, 'Product', table_header_format)
+        worksheet.write(row, 3, 'From', table_header_format)
+        worksheet.write(row, 4, 'To', table_header_format)
+        worksheet.write(row, 5, 'QTY Done', table_header_format)
+        worksheet.write(row, 6, 'Out', table_header_format)
+        worksheet.write(row, 7, 'In', table_header_format)
+        worksheet.write(row, 8, 'Balance', table_header_format)
+        worksheet.write(row, 9, 'Partner', table_header_format)
+        worksheet.write(row, 10, 'Cost', table_header_format)
+        worksheet.write(row, 11, 'Source Document', table_header_format)
+
+        row +=1
+        col = 0
+        balance= 0
+        if self.generate_data():
+            for line in self.generate_data():
+                date = str(line.picking_id.date_done)
+                worksheet.write(row, col,date , custom_format)
+                worksheet.write(row, col+1, str(line.reference), custom_format)
+                worksheet.write(row, col+2, str(line.product_id.name), custom_format)
+                worksheet.write(row , col+3, line.location_id.complete_name, custom_format)
+                worksheet.write(row , col+4, line.location_dest_id.complete_name, custom_format)
+                worksheet.write(row, col + 5, line.qty_done, custom_format)
+                if self.stock_location_id.id == line.location_id.id:
+                    worksheet.write(row, col + 6, line.qty_done, custom_format)
+                    balance -= line.qty_done
                 else:
-                    cost = rec.move_id.unit_inventory_cost
-                count = 0
-                try:
-                    sheets.write(row + 1, count,
-                                datetime.datetime.strptime(str(rec.picking_id.date_done), '%Y-%m-%d %H:%M:%S').strftime(
-                                     '%Y-%m-%d %H:%M:%S'), format2)
-                except Exception as e:
-                    sheets.write(row + 1, count,datetime.datetime.strptime(str(rec.date), '%Y-%m-%d %H:%M:%S').strftime(
-                                     '%Y-%m-%d %H:%M:%S')
-                                 ,format2)
-
-                sheets.write(row + 1, count + 1, rec.reference, format2)
-                sheets.write(row + 1, count + 2, rec.product_id.name, format2)
-                sheets.write(row + 1, count + 3, rec.location_id.complete_name, format2)
-                sheets.write(row + 1, count + 4, rec.location_dest_id.complete_name, format2)
-                # rec.calculate_qty(self.stock_location_id)
-
-                # product_move[counter - 1].done_qty_2 = 0 done_quan = 0 if "INV" in rec.reference else print('No')
-                done_quan = 0 if counter == 0 else product_move[counter - 1].done_qty_2 + done_quan
-                # print('1',rec.done_qty_2)
-                # print('2',done_quan)
-                # print('2',rec.done_qty_2)
-                # if "INV" in rec.reference:
-                #     test = rec.product_uom_qty
-                # else:
-                #     test = rec.done_qty_2 + done_quan
-
-                sheets.write(row + 1, count + 5, rec.qty_done, format2)
-                if "INV" in rec.reference:
-                    sheets.write(row + 1, count + 6, "", format2)
+                    worksheet.write(row, col + 6, "", custom_format)
+                if self.stock_location_id.id == line.location_dest_id.id:
+                    worksheet.write(row, col +7, line.qty_done, custom_format)
+                    balance += line.qty_done
                 else:
-                    if wizard.stock_location_id.id == rec.location_id.id:
-                        sheets.write(row + 1, count + 6, round(rec.qty_done, 2), format2)
-                    else:
-                        sheets.write(row + 1, count + 6, '', format2)
-                if "INV" in rec.reference:
-                    sheets.write(row + 1, count + 7, "", format2)
-                else:
-                    if wizard.stock_location_id.id == rec.location_dest_id.id:
-                        sheets.write(row + 1, count + 7, round(rec.qty_done, 2), format2)
-                    else:
-                        sheets.write(row + 1, count + 7, '', format2)
-                # if "INV" in rec.reference:
-                if "INV" in rec.reference:
-                    x = self.env['stock.inventory'].search([('write_date','=',rec.write_date)]).id
-                    # print(x)
-                    # print(rec.write_date)
-                    sheets.write(row + 1, count + 8, self.env['stock.inventory.line'].search([('product_id','=',rec.product_id.id),('location_id','=',self.stock_location_id.id),('inventory_id','=',x)]).product_qty, format2)
-                else:
-                    sheets.write(row + 1, count + 8, rec.qty_done + done_quan, format2)
-                # else:
-                    # sheets.write(row + 1, count + 8, rec.done_qty_2 + done_quan, format2)
-
-                sheets.write(row + 1, count + 9, rec.my_partner.name, format2)
-
-                # sheets.write(row + 1, count + 8, rec.qty_done, format2)
-                #
-                # sheets.write(row + 1, count + 9, rec.state, format2)
-                sheets.write(row + 1, count + 10, round(cost, 2), format2)
-
-                # sheets.write(row + 1, count + 11, rec.picking_id.origin1.name if rec.picking_id.origin1.name else '',
-                #              format2)
-                row += 1
+                    worksheet.write(row, col + 6, "", custom_format)
+                worksheet.write(row, col + 8, balance, custom_format)
+                worksheet.write(row, col + 9, line.picking_id.partner_id.name, custom_format)
+                worksheet.write(row, col + 10, line.move_id.price_unit, custom_format)
+                worksheet.write(row, col + 11, line.picking_id.origin, custom_format)
+                row +=1
         else:
-            raise Warning("Currently No Product Move!!")
-        filename = ('/tmp/Product Move Report' + '.xls')
-        workbook.save(filename)
-        file = open(filename, "rb")
-        file_data = file.read()
-        out = base64.encodebytes(file_data)
-        self.write({'state': 'get', 'file_name': out, 'sale_order_data': 'Product Move Report.xls'})
+            raise ValidationError("Nothing to Print!")
+
+        workbook.close()
+        output.seek(0)
+        self.write({'excel_sheet': base64.encodestring(output.getvalue())})
+
         return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'sale.order.report',
-            'view_mode': 'form',
-            'view_type': 'form',
-            'res_id': self.id,
-            'target': 'new',
+            'type': 'ir.actions.act_url',
+            'name': 'Deviation',
+            'url': '/web/content/sale.order.report/%s/excel_sheet/Product_Moves_Report.xlsx?download=true' % (self.id),
+            'target': 'self'
         }
+
 
 
 class ProductMoveLineInherit(models.Model):

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import xlwt
 import base64
 import calendar
 from io import StringIO

@@ -9,11 +9,11 @@
     'author': 'HK',
     'license': "OPL-1",
     'depends': [
-        'stock','product_done_qty_stock'
+        'stock'
     ],
     'data': [
         'wizard/sale_order_xls_view.xml',
-        # 'security/ir.model.access.csv',
+        # 'securty/ir.model.access.csv',
     ],
     'demo': [],  
     'images': ['static/description/banner.png'],
