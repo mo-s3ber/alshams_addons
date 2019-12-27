@@ -105,11 +105,7 @@ class ProductMoveReport(models.TransientModel):
         if self.generate_data():
             for line in self.generate_data():
                 date = str(line.picking_id.date_done)
-                if date or line.date:
-                    if date:
-                        worksheet.write(row, col,datetime.datetime.strptime(str(date), '%Y-%m-%d %H:%M:%S').strftime(
-                '%Y-%m-%d %H:%M:%S'), custom_format)
-                    else:
+                if line.date:
                         worksheet.write(row, col, datetime.datetime.strptime(str(line.date), '%Y-%m-%d %H:%M:%S').strftime(
                             '%Y-%m-%d %H:%M:%S'), custom_format)
                 else:
