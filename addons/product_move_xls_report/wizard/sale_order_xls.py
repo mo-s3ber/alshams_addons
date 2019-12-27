@@ -12,6 +12,13 @@ from functools import partial
 from itertools import chain
 from pytz import timezone, utc
 from datetime import datetime
+import base64
+import calendar
+from io import StringIO
+from odoo import models, fields, api, _
+from odoo.exceptions import Warning
+from datetime import date
+import datetime
 
 
 def is_int(n):
@@ -100,9 +107,11 @@ class ProductMoveReport(models.TransientModel):
                 date = str(line.picking_id.date_done)
                 if date or line.date:
                     if date:
-                        worksheet.write(row, col,date , custom_format)
+                        worksheet.write(row, col,datetime.datetime.strptime(str(date), '%Y-%m-%d %H:%M:%S').strftime(
+                '%Y-%m-%d %H:%M:%S'), custom_format)
                     else:
-                        worksheet.write(row, col, str(line.date), custom_format)
+                        worksheet.write(row, col, datetime.datetime.strptime(str(line.date), '%Y-%m-%d %H:%M:%S').strftime(
+                            '%Y-%m-%d %H:%M:%S'), custom_format)
                 else:
                     worksheet.write(row, col, "", custom_format)
                 if line.reference:
