@@ -97,9 +97,7 @@
                 <xpath expr="//field[@name='origin']" position="after">
                     <field name="analytic_id"/>
                 </xpath>
-                <xpath expr="//field[@name='product_uom']" position="after">
-                    <field name="unit_inventory_cost"/>
-                </xpath>
+
             </field>
         </record>
 

@@ -98,12 +98,30 @@ class ProductMoveReport(models.TransientModel):
         if self.generate_data():
             for line in self.generate_data():
                 date = str(line.picking_id.date_done)
-                worksheet.write(row, col,date , custom_format)
-                worksheet.write(row, col+1, str(line.reference), custom_format)
-                worksheet.write(row, col+2, str(line.product_id.name), custom_format)
-                worksheet.write(row , col+3, line.location_id.complete_name, custom_format)
-                worksheet.write(row , col+4, line.location_dest_id.complete_name, custom_format)
-                worksheet.write(row, col + 5, line.qty_done, custom_format)
+                if date:
+                    worksheet.write(row, col,date , custom_format)
+                else:
+                    worksheet.write(row, col, line.date, custom_format)
+                if line.reference:
+                    worksheet.write(row, col+1, str(line.reference), custom_format)
+                else:
+                    worksheet.write(row, col + 1, "", custom_format)
+                if line.product_id.name:
+                    worksheet.write(row, col+2, str(line.product_id.name), custom_format)
+                else:
+                    worksheet.write(row, col+2, "", custom_format)
+                if line.location_id.complete_name:
+                    worksheet.write(row , col+3, line.location_id.complete_name, custom_format)
+                else:
+                    worksheet.write(row , col+3, "", custom_format)
+                if line.location_dest_id.complete_name:
+                    worksheet.write(row , col+4, line.location_dest_id.complete_name, custom_format)
+                else:
+                    worksheet.write(row , col+4, "", custom_format)
+                if line.qty_done:
+                    worksheet.write(row, col + 5, line.qty_done, custom_format)
+                else:
+                    worksheet.write(row, col + 5, "", custom_format)
                 if self.stock_location_id.id == line.location_id.id:
                     worksheet.write(row, col + 6, line.qty_done, custom_format)
                     balance -= line.qty_done
@@ -113,11 +131,23 @@ class ProductMoveReport(models.TransientModel):
                     worksheet.write(row, col +7, line.qty_done, custom_format)
                     balance += line.qty_done
                 else:
-                    worksheet.write(row, col + 6, "", custom_format)
-                worksheet.write(row, col + 8, balance, custom_format)
-                worksheet.write(row, col + 9, line.picking_id.partner_id.name, custom_format)
-                worksheet.write(row, col + 10, line.move_id.price_unit, custom_format)
-                worksheet.write(row, col + 11, line.picking_id.origin, custom_format)
+                    worksheet.write(row, col + 7, "", custom_format)
+                if balance:
+                    worksheet.write(row, col + 8, balance, custom_format)
+                else:
+                    worksheet.write(row, col + 8, "", custom_format)
+                if line.picking_id.partner_id.name:
+                    worksheet.write(row, col + 9, line.picking_id.partner_id.name, custom_format)
+                else:
+                    worksheet.write(row, col + 9, "", custom_format)
+                if line.move_id.price_unit:
+                    worksheet.write(row, col + 10, line.move_id.price_unit, custom_format)
+                else:
+                    worksheet.write(row, col + 10, "", custom_format)
+                if line.picking_id.origin:
+                    worksheet.write(row, col + 11, line.picking_id.origin, custom_format)
+                else:
+                    worksheet.write(row, col + 11, "", custom_format)
                 row +=1
         else:
             raise ValidationError("Nothing to Print!")
