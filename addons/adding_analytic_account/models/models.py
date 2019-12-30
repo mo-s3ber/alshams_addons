@@ -4,7 +4,6 @@ from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_utils, float_compare
-
 import math
 
 
@@ -34,6 +33,7 @@ class StockInventoryLine(models.Model):
             'location_id': location_id,
             'location_dest_id': location_dest_id,
             'analytic_account_id':analytic_account,
+            'price_unit':self.force_unit_inventory_cost,
             'move_line_ids': [(0, 0, {
                 'product_id': self.product_id.id,
                 'lot_id': self.prod_lot_id.id,
