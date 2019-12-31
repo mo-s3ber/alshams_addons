@@ -80,7 +80,7 @@
                             <table class="table table-bordered" border="4" style="width:100%;">
                                 <thead>
                                     <tr>
-                                        <th t-if="o.origin1">
+                                        <th t-if="o.origin">
                                             <strong>الطلب</strong>
                                         </th>
                                         <th>
@@ -96,14 +96,14 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td t-if="o.origin1">
-                                            <span t-field="o.origin1"/>
+                                        <td t-if="o.origin">
+                                            <span t-field="o.origin"/>
                                         </td>
                                         <td>
                                             <span t-field="o.state"/>
                                         </td>
-                                        <td t-if="o.origin1">
-                                            <span t-field="o.origin1"/>
+                                        <td t-if="o.origin">
+                                            <span t-field="o.origin"/>
                                         </td>
                                         <td name="td_sched_date" width="20%">
                                             <span t-field="o.scheduled_date"/>
