@@ -264,7 +264,7 @@ class split_journal_entry(models.Model):
                 'journal_id': journal_id,
                 'line_ids': move_lines,
                 'date': date,
-                'ref': str(self.inventory_id.name),
+                'ref': inventory.inventory_id.name,
                 'stock_move_id': self.id,
                 'analytic_account_id': analytic_account_id or False,
             })
