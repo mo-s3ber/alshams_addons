@@ -10,5 +10,17 @@
                 </xpath>
             </field>
         </record>
+
+         <record id="to_force_inventory_cost_picking" model="ir.ui.view">
+           <field name="name">force.inventory.cost.form</field>
+           <field name="model">stock.picking</field>
+           <field name="inherit_id" ref="stock.view_picking_form"/>
+           <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_uom']" position="after">
+                  <field name="unit_inventory_cost"  attrs="{'readonly': [('is_force_cost', '=', False)]}"/>
+                    <field name="is_force_cost" groups="force_inventory_cost.group_force_unit_inventory"/>
+                </xpath>
+           </field>
+       </record>
     </data>
 </odoo>
