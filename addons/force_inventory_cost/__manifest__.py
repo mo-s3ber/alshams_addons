@@ -25,5 +25,5 @@
     ],
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'stock', 'inventory_journal_entry_alshams', 'adding_analytic_account'],
+    'depends': ['base', 'stock'],
 }

@@ -15,28 +15,28 @@ from odoo.exceptions import UserError
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from operator import itemgetter
 
-class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
-
-    internal_transfer_account_id = fields.Many2one('account.account', string="Account")
-
-    @api.model
-    def get_values(self):
-        res = super(ResConfigSettings, self).get_values()
-        params = self.env['ir.config_parameter'].sudo()
-        guarantee = params.get_param('internal_transfer_account_id')
-
-        res.update(
-            internal_transfer_account_id=guarantee and int(guarantee) or '',
-        )
-        return res
-
-    @api.multi
-    def set_values(self):
-        res = super(ResConfigSettings, self).set_values()
-        self.env['ir.config_parameter'].sudo().set_param('internal_transfer_account_id',
-                                                         self.internal_transfer_account_id and
-                                                         self.internal_transfer_account_id.id or '')
+# class ResConfigSettings(models.TransientModel):
+#     _inherit = 'res.config.settings'
+#
+#     internal_transfer_account_id = fields.Many2one('account.account', string="Account")
+#
+#     @api.model
+#     def get_values(self):
+#         res = super(ResConfigSettings, self).get_values()
+#         params = self.env['ir.config_parameter'].sudo()
+#         guarantee = params.get_param('internal_transfer_account_id')
+#
+#         res.update(
+#             internal_transfer_account_id=guarantee and int(guarantee) or '',
+#         )
+#         return res
+#
+#     @api.multi
+#     def set_values(self):
+#         res = super(ResConfigSettings, self).set_values()
+#         self.env['ir.config_parameter'].sudo().set_param('internal_transfer_account_id',
+#                                                          self.internal_transfer_account_id and
+#                                                          self.internal_transfer_account_id.id or '')
 
 
 class StockPicking(models.Model):
@@ -159,35 +159,35 @@ class StockPicking(models.Model):
     #         .mapped('move_lines')._action_assign()
     #     return True
 
-    def move(self, journal_id, amount, account_credit, account_debit, name):
-        lines = [
-            (0, 0, {
-                'name': str(name),
-                'account_id': account_credit,
-                'debit': 0,
-                'credit': amount,
-                'partner_id': self.partner_id.id,
-                'date_maturity': fields.Date.today(),
-
-            }),
-            (0, 0, {
-                'name': '/',
-                'account_id': account_debit,
-                'debit': amount,
-                'credit': 0,
-                'partner_id': self.partner_id.id,
-                'date_maturity': fields.Date.today(),
-            })
-        ]
-        move_id = self.env['account.move'].create({
-            'date': fields.Date.today(),
-            'journal_id': journal_id,
-            'ref': name,
-            'line_ids': lines,
-            'analytic_account_id': self.analytic_id.id,
-
-        })
-        move_id.post()
+    # def move(self, journal_id, amount, account_credit, account_debit, name):
+    #     lines = [
+    #         (0, 0, {
+    #             'name': str(name),
+    #             'account_id': account_credit,
+    #             'debit': 0,
+    #             'credit': amount,
+    #             'partner_id': self.partner_id.id,
+    #             'date_maturity': fields.Date.today(),
+    #
+    #         }),
+    #         (0, 0, {
+    #             'name': '/',
+    #             'account_id': account_debit,
+    #             'debit': amount,
+    #             'credit': 0,
+    #             'partner_id': self.partner_id.id,
+    #             'date_maturity': fields.Date.today(),
+    #         })
+    #     ]
+    #     move_id = self.env['account.move'].create({
+    #         'date': fields.Date.today(),
+    #         'journal_id': journal_id,
+    #         'ref': name,
+    #         'line_ids': lines,
+    #         'analytic_account_id': self.analytic_id.id,
+    #
+    #     })
+    #     move_id.post()
 
 
 class AccountMove(models.Model):
@@ -244,7 +244,7 @@ class StockMove(models.Model):
                 'journal_id': journal_id,
                 'line_ids': move_lines,
                 'date': date,
-                'ref': ref,
+                'ref': str(self.inventory_id.name),
                 'stock_move_id': self.id,
                 'analytic_account_id': analytic_account_id
             })

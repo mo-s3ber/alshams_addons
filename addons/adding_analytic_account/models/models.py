@@ -45,6 +45,7 @@ class StockInventoryLine(models.Model):
                 'location_id': location_id,
                 'location_dest_id': location_dest_id,
                 'owner_id': self.partner_id.id,
+                'price_unit': self.force_unit_inventory_cost,
             })]
         }
 
