@@ -15,28 +15,28 @@ from odoo.exceptions import UserError
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from operator import itemgetter
 
-# class ResConfigSettings(models.TransientModel):
-#     _inherit = 'res.config.settings'
-#
-#     internal_transfer_account_id = fields.Many2one('account.account', string="Account")
-#
-#     @api.model
-#     def get_values(self):
-#         res = super(ResConfigSettings, self).get_values()
-#         params = self.env['ir.config_parameter'].sudo()
-#         guarantee = params.get_param('internal_transfer_account_id')
-#
-#         res.update(
-#             internal_transfer_account_id=guarantee and int(guarantee) or '',
-#         )
-#         return res
-#
-#     @api.multi
-#     def set_values(self):
-#         res = super(ResConfigSettings, self).set_values()
-#         self.env['ir.config_parameter'].sudo().set_param('internal_transfer_account_id',
-#                                                          self.internal_transfer_account_id and
-#                                                          self.internal_transfer_account_id.id or '')
+class ResConfigSettings(models.TransientModel):
+    _inherit = 'res.config.settings'
+
+    internal_transfer_account_id = fields.Many2one('account.account', string="Account")
+
+    @api.model
+    def get_values(self):
+        res = super(ResConfigSettings, self).get_values()
+        params = self.env['ir.config_parameter'].sudo()
+        guarantee = params.get_param('internal_transfer_account_id')
+
+        res.update(
+            internal_transfer_account_id=guarantee and int(guarantee) or '',
+        )
+        return res
+
+    @api.multi
+    def set_values(self):
+        res = super(ResConfigSettings, self).set_values()
+        self.env['ir.config_parameter'].sudo().set_param('internal_transfer_account_id',
+                                                         self.internal_transfer_account_id and
+                                                         self.internal_transfer_account_id.id or '')
 
 
 class StockPicking(models.Model):
