@@ -216,39 +216,6 @@ class StockMove(models.Model):
 
     is_force_cost = fields.Boolean(string='Force Cost', default=True)
 
-    def _create_account_move_line(self, credit_account_id, debit_account_id, journal_id):
-        self.ensure_one()
-        AccountMove = self.env['account.move']
-        quantity = self.env.context.get('forced_quantity', self.product_qty)
-        quantity = quantity if self._is_in() else -1 * quantity
-
-        # Make an informative `ref` on the created account move to differentiate between classic
-        # movements, vacuum and edition of past moves.
-        ref = self.picking_id.name
-        if self.env.context.get('force_valuation_amount'):
-            if self.env.context.get('forced_quantity') == 0:
-                ref = 'Revaluation of %s (negative inventory)' % ref
-            elif self.env.context.get('forced_quantity') is not None:
-                ref = 'Correction of %s (modification of past move)' % ref
-
-        move_lines = self.with_context(forced_ref=ref)._prepare_account_move_line(quantity, abs(self.value),
-                                                                                  credit_account_id, debit_account_id)
-        analytic_account_id = 0
-        if move_lines:
-            inventory = self.env['stock.inventory.line'].search(
-                [('inventory_id', '=', self.inventory_id.id), ('product_id', '=', self.product_id.id)])
-            if inventory:
-                analytic_account_id = inventory.analytic_account_id.id
-            date = self._context.get('force_period_date', fields.Date.context_today(self))
-            new_account_move = AccountMove.sudo().create({
-                'journal_id': journal_id,
-                'line_ids': move_lines,
-                'date': date,
-                'ref': str(self.inventory_id.name),
-                'stock_move_id': self.id,
-                'analytic_account_id': analytic_account_id
-            })
-            new_account_move.post()
 
     def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id):
         """

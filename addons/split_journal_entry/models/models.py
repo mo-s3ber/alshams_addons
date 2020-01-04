@@ -255,13 +255,18 @@ class split_journal_entry(models.Model):
 
         move_lines = self._prepare_account_move_line(quantity, abs(self.value), credit_account_id, debit_account_id)
         if move_lines:
+            inventory = self.env['stock.inventory.line'].search(
+                [('inventory_id', '=', self.inventory_id.id), ('product_id', '=', self.product_id.id)])
+            if inventory:
+                analytic_account_id = inventory.analytic_account_id.id
             date = self._context.get('force_period_date', fields.Date.context_today(self))
             new_account_move = AccountMove.sudo().create({
                 'journal_id': journal_id,
                 'line_ids': move_lines,
                 'date': date,
-                'ref': ref,
+                'ref': str(self.inventory_id.name),
                 'stock_move_id': self.id,
+                'analytic_account_id': analytic_account_id or False,
             })
             if self.serialized_candidates:
                 serialized_candidates = json.loads(self.serialized_candidates)
