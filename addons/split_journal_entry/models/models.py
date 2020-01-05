@@ -240,25 +240,36 @@ class split_journal_entry(models.Model):
             elif self.env.context.get('forced_quantity') is not None:
                 ref = 'Correction of %s (modification of past move)' % ref
                 
-        unit_inventory_cost = self.env['stock.move'].sudo().browse(self.id).unit_inventory_cost
-        inventory_adjustment_location_id = 5
-        if self.location_id.id == inventory_adjustment_location_id:
-            domain = [('location_dest_id', '=', self.location_dest_id.id), ('product_id', '=', self.product_id.id),
-                      ('state', '=', 'done'), ('id', '!=', self.id)]
-            unit_inventory_cost = self.env['stock.move'].sudo().search(domain, order='id desc',
-                                                                       limit=1).unit_inventory_cost
-            self.unit_inventory_cost = unit_inventory_cost
-        self.value = unit_inventory_cost * self.quantity_done
+        # unit_inventory_cost = self.env['stock.move'].sudo().browse(self.id).unit_inventory_cost
+        # inventory_adjustment_location_id = 5
+        # if self.location_id.id == inventory_adjustment_location_id:
+        #     domain = [('location_dest_id', '=', self.location_dest_id.id), ('product_id', '=', self.product_id.id),
+        #               ('state', '=', 'done'), ('id', '!=', self.id)]
+        #     unit_inventory_cost = self.env['stock.move'].sudo().search(domain, order='id desc',
+        #                                                                limit=1).unit_inventory_cost
+        #     self.unit_inventory_cost = unit_inventory_cost
+        # self.value = unit_inventory_cost * self.quantity_done
 
         if self.is_force_cost and self.picking_id.picking_type_id.is_force_cost:
             self.value = self.force_unit_inventory_cost * self.quantity_done
+
+        inventory = self.env['stock.inventory.line'].search(
+            [('inventory_id', '=', self.inventory_id.id), ('product_id', '=', self.product_id.id)])
+        if inventory:
+            if inventory.is_force_cost:
+                self.value = inventory.force_unit_inventory_cost * self.quantity_done
+
+
 
         move_lines = self._prepare_account_move_line(quantity, abs(self.value), credit_account_id, debit_account_id)
         if move_lines:
             inventory = self.env['stock.inventory.line'].search(
                 [('inventory_id', '=', self.inventory_id.id), ('product_id', '=', self.product_id.id)])
+            analytic_account_id = False
             if inventory:
                 analytic_account_id = inventory.analytic_account_id.id
+            if self.picking_id:
+                analytic_account_id = self.picking_id.analytic_id.id
             date = self._context.get('force_period_date', fields.Date.context_today(self))
             new_account_move = AccountMove.sudo().create({
                 'journal_id': journal_id,
@@ -266,7 +277,7 @@ class split_journal_entry(models.Model):
                 'date': date,
                 'ref': str(inventory.inventory_id.name),
                 'stock_move_id': self.id,
-                'analytic_account_id': analytic_account_id if inventory else False,
+                'analytic_account_id': analytic_account_id,
             })
             if self.serialized_candidates:
                 serialized_candidates = json.loads(self.serialized_candidates)
