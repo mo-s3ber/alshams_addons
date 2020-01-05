@@ -255,13 +255,18 @@ class split_journal_entry(models.Model):
 
         move_lines = self._prepare_account_move_line(quantity, abs(self.value), credit_account_id, debit_account_id)
         if move_lines:
+            inventory = self.env['stock.inventory.line'].search(
+                [('inventory_id', '=', self.inventory_id.id), ('product_id', '=', self.product_id.id)])
+            if inventory:
+                analytic_account_id = inventory.analytic_account_id.id
             date = self._context.get('force_period_date', fields.Date.context_today(self))
             new_account_move = AccountMove.sudo().create({
                 'journal_id': journal_id,
                 'line_ids': move_lines,
                 'date': date,
-                'ref': ref,
+                'ref': str(inventory.inventory_id.name),
                 'stock_move_id': self.id,
+                'analytic_account_id': analytic_account_id or False,
             })
             if self.serialized_candidates:
                 serialized_candidates = json.loads(self.serialized_candidates)
@@ -588,40 +593,6 @@ class AccountInvoiceTax(models.Model):
 
     product_id = fields.Many2one('product.product', 'Product')
 
-
-class InventoryLine(models.Model):
-    _inherit = "stock.inventory.line"
-
-
-    def _get_move_values(self, qty, location_id, location_dest_id, out):
-        self.ensure_one()
-        vals = {
-            'name': _('INV:') + (self.inventory_id.name or ''),
-            'product_id': self.product_id.id,
-            'product_uom': self.product_uom_id.id,
-            'product_uom_qty': qty,
-            'date': self.inventory_id.date,
-            'company_id': self.inventory_id.company_id.id,
-            'inventory_id': self.inventory_id.id,
-            'state': 'confirmed',
-            'restrict_partner_id': self.partner_id.id,
-            'location_id': location_id,
-            'location_dest_id': location_dest_id,
-            'move_line_ids': [(0, 0, {
-                'product_id': self.product_id.id,
-                'lot_id': self.prod_lot_id.id,
-                'product_uom_qty': 0,  # bypass reservation here
-                'product_uom_id': self.product_uom_id.id,
-                'qty_done': qty,
-                'package_id': out and self.package_id.id or False,
-                'result_package_id': (not out) and self.package_id.id or False,
-                'location_id': location_id,
-                'location_dest_id': location_dest_id,
-                'owner_id': self.partner_id.id,
-                'unit_inventory_cost': self.product_id.standard_price
-            })]
-        }
-        return vals
 
 
 class StockInventory(models.Model):

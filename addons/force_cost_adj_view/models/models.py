@@ -38,156 +38,155 @@ from operator import itemgetter
 #                                                          self.internal_transfer_account_id and
 #                                                          self.internal_transfer_account_id.id or '')
 
-
-class StockPicking(models.Model):
-    _inherit = 'stock.picking'
-
-    # @api.multi
-    # def button_validate(self):
-    #     self.ensure_one()
-    #     if not self.move_lines and not self.move_line_ids:
-    #         raise UserError(_('Please add some items to move.'))
-    #
-    #     # If no lots when needed, raise error
-    #     picking_type = self.picking_type_id
-    #     precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-    #     no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in self.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel')))
-    #     no_reserved_quantities = all(float_is_zero(move_line.product_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in self.move_line_ids)
-    #     if no_reserved_quantities and no_quantities_done:
-    #         raise UserError(_('You cannot validate a transfer if no quantites are reserved nor done. To force the transfer, switch in edit more and encode the done quantities.'))
-    #
-    #     if picking_type.use_create_lots or picking_type.use_existing_lots:
-    #         lines_to_check = self.move_line_ids
-    #         if not no_quantities_done:
-    #             lines_to_check = lines_to_check.filtered(
-    #                 lambda line: float_compare(line.qty_done, 0,
-    #                                            precision_rounding=line.product_uom_id.rounding)
-    #             )
-    #
-    #         for line in lines_to_check:
-    #             product = line.product_id
-    #             if product and product.tracking != 'none':
-    #                 if not line.lot_name and not line.lot_id:
-    #                     raise UserError(_('You need to supply a Lot/Serial number for product %s.') % product.display_name)
-    #
-    #     if no_quantities_done:
-    #         view = self.env.ref('stock.view_immediate_transfer')
-    #         wiz = self.env['stock.immediate.transfer'].create({'pick_ids': [(4, self.id)]})
-    #         return {
-    #             'name': _('Immediate Transfer?'),
-    #             'type': 'ir.actions.act_window',
-    #             'view_type': 'form',
-    #             'view_mode': 'form',
-    #             'res_model': 'stock.immediate.transfer',
-    #             'views': [(view.id, 'form')],
-    #             'view_id': view.id,
-    #             'target': 'new',
-    #             'res_id': wiz.id,
-    #             'context': self.env.context,
-    #         }
-    #
-    #     if self._get_overprocessed_stock_moves() and not self._context.get('skip_overprocessed_check'):
-    #         view = self.env.ref('stock.view_overprocessed_transfer')
-    #         wiz = self.env['stock.overprocessed.transfer'].create({'picking_id': self.id})
-    #         return {
-    #             'type': 'ir.actions.act_window',
-    #             'view_type': 'form',
-    #             'view_mode': 'form',
-    #             'res_model': 'stock.overprocessed.transfer',
-    #             'views': [(view.id, 'form')],
-    #             'view_id': view.id,
-    #             'target': 'new',
-    #             'res_id': wiz.id,
-    #             'context': self.env.context,
-    #         }
-    #
-    #     # Check backorder should check for other barcodes
-    #     if self._check_backorder():
-    #         return self.action_generate_backorder_wizard()
-    #     self.action_done()
-    #     internal_transfer_account_id = int(
-    #         self.env['ir.config_parameter'].sudo().get_param('internal_transfer_account_id'))
-    #
-    #     if not internal_transfer_account_id:
-    #         raise UserError('Please Select Internal Transfer Account in configuration')
-    #     else:
-    #         account_debit = int(internal_transfer_account_id)
-    #
-    #     if self.location_id.usage == 'transit' and self.picking_type_id.code == 'internal':
-    #         for line in self.move_ids_without_package:
-    #             self.move(line.product_id.categ_id.property_stock_journal.id,
-    #                       line.unit_inventory_cost * line.quantity_done, account_debit,
-    #                       line.product_id.categ_id.property_stock_valuation_account_id.id, self.name)
-    #     if self.location_dest_id.usage == 'transit' and self.picking_type_id.code == 'internal':
-    #         if self.move_ids_without_package:
-    #             for line in self.move_ids_without_package:
-    #                 self.move(line.product_id.categ_id.property_stock_journal.id,
-    #                           line.unit_inventory_cost * line.quantity_done,
-    #                           line.product_id.categ_id.property_stock_valuation_account_id.id, account_debit, self.name)
-    #
-    #     return
-
-    # @api.multi
-    # def action_confirm(self):
-    #     internal_transfer_account_id = int(self.env['ir.config_parameter'].sudo().get_param('internal_transfer_account_id'))
-    #
-    #     if not internal_transfer_account_id:
-    #         raise UserError('Please Select Internal Transfer Account in configuration')
-    #     else:
-    #         account_debit = int(internal_transfer_account_id)
-    #
-    #     if self.location_id.usage == 'transit' and self.picking_type_id.code == 'internal':
-    #         for line in self.move_ids_without_package:
-    #             self.move(line.product_id.categ_id.property_stock_journal.id,
-    #                       line.unit_inventory_cost * line.quantity_done, account_debit,
-    #                       line.product_id.categ_id.property_stock_valuation_account_id.id, self.name)
-    #     if self.location_dest_id.usage == 'transit' and self.picking_type_id.code == 'internal':
-    #         if self.move_ids_without_package:
-    #             for line in self.move_ids_without_package:
-    #                 self.move(line.product_id.categ_id.property_stock_journal.id,
-    #                           line.unit_inventory_cost * line.quantity_done,
-    #                           line.product_id.categ_id.property_stock_valuation_account_id.id, account_debit, self.name)
-    #
-    #     self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
-    #     # call `_action_confirm` on every draft move
-    #     self.mapped('move_lines') \
-    #         .filtered(lambda move: move.state == 'draft') \
-    #         ._action_confirm()
-    #     # call `_action_assign` on every confirmed move which location_id bypasses the reservation
-    #     self.filtered(lambda picking: picking.location_id.usage in (
-    #         'supplier', 'inventory', 'production') and picking.state == 'confirmed') \
-    #         .mapped('move_lines')._action_assign()
-    #     return True
-
-    def move(self, journal_id, amount, account_credit, account_debit, name):
-        lines = [
-            (0, 0, {
-                'name': str(name),
-                'account_id': account_credit,
-                'debit': 0,
-                'credit': amount,
-                'partner_id': self.partner_id.id,
-                'date_maturity': fields.Date.today(),
-
-            }),
-            (0, 0, {
-                'name': '/',
-                'account_id': account_debit,
-                'debit': amount,
-                'credit': 0,
-                'partner_id': self.partner_id.id,
-                'date_maturity': fields.Date.today(),
-            })
-        ]
-        move_id = self.env['account.move'].create({
-            'date': fields.Date.today(),
-            'journal_id': journal_id,
-            'ref': name,
-            'line_ids': lines,
-            'analytic_account_id': self.analytic_id.id,
-
-        })
-        move_id.post()
+# class StockPicking(models.Model):
+#     _inherit = 'stock.picking'
+#
+#     @api.multi
+#     def button_validate(self):
+#         self.ensure_one()
+#         if not self.move_lines and not self.move_line_ids:
+#             raise UserError(_('Please add some items to move.'))
+#
+#         # If no lots when needed, raise error
+#         picking_type = self.picking_type_id
+#         precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+#         no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in self.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel')))
+#         no_reserved_quantities = all(float_is_zero(move_line.product_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in self.move_line_ids)
+#         if no_reserved_quantities and no_quantities_done:
+#             raise UserError(_('You cannot validate a transfer if no quantites are reserved nor done. To force the transfer, switch in edit more and encode the done quantities.'))
+#
+#         if picking_type.use_create_lots or picking_type.use_existing_lots:
+#             lines_to_check = self.move_line_ids
+#             if not no_quantities_done:
+#                 lines_to_check = lines_to_check.filtered(
+#                     lambda line: float_compare(line.qty_done, 0,
+#                                                precision_rounding=line.product_uom_id.rounding)
+#                 )
+#
+#             for line in lines_to_check:
+#                 product = line.product_id
+#                 if product and product.tracking != 'none':
+#                     if not line.lot_name and not line.lot_id:
+#                         raise UserError(_('You need to supply a Lot/Serial number for product %s.') % product.display_name)
+#
+#         if no_quantities_done:
+#             view = self.env.ref('stock.view_immediate_transfer')
+#             wiz = self.env['stock.immediate.transfer'].create({'pick_ids': [(4, self.id)]})
+#             return {
+#                 'name': _('Immediate Transfer?'),
+#                 'type': 'ir.actions.act_window',
+#                 'view_type': 'form',
+#                 'view_mode': 'form',
+#                 'res_model': 'stock.immediate.transfer',
+#                 'views': [(view.id, 'form')],
+#                 'view_id': view.id,
+#                 'target': 'new',
+#                 'res_id': wiz.id,
+#                 'context': self.env.context,
+#             }
+#
+#         if self._get_overprocessed_stock_moves() and not self._context.get('skip_overprocessed_check'):
+#             view = self.env.ref('stock.view_overprocessed_transfer')
+#             wiz = self.env['stock.overprocessed.transfer'].create({'picking_id': self.id})
+#             return {
+#                 'type': 'ir.actions.act_window',
+#                 'view_type': 'form',
+#                 'view_mode': 'form',
+#                 'res_model': 'stock.overprocessed.transfer',
+#                 'views': [(view.id, 'form')],
+#                 'view_id': view.id,
+#                 'target': 'new',
+#                 'res_id': wiz.id,
+#                 'context': self.env.context,
+#             }
+#
+#         # Check backorder should check for other barcodes
+#         if self._check_backorder():
+#             return self.action_generate_backorder_wizard()
+#         self.action_done()
+#         internal_transfer_account_id = int(
+#             self.env['ir.config_parameter'].sudo().get_param('internal_transfer_account_id'))
+#
+#         if not internal_transfer_account_id:
+#             raise UserError('Please Select Internal Transfer Account in configuration')
+#         else:
+#             account_debit = int(internal_transfer_account_id)
+#
+#         if self.location_id.usage == 'transit' and self.picking_type_id.code == 'internal':
+#             for line in self.move_ids_without_package:
+#                 self.move(line.product_id.categ_id.property_stock_journal.id,
+#                           line.unit_inventory_cost * line.quantity_done, account_debit,
+#                           line.product_id.categ_id.property_stock_valuation_account_id.id, self.name)
+#         if self.location_dest_id.usage == 'transit' and self.picking_type_id.code == 'internal':
+#             if self.move_ids_without_package:
+#                 for line in self.move_ids_without_package:
+#                     self.move(line.product_id.categ_id.property_stock_journal.id,
+#                               line.unit_inventory_cost * line.quantity_done,
+#                               line.product_id.categ_id.property_stock_valuation_account_id.id, account_debit, self.name)
+#
+#         return
+#
+#     @api.multi
+#     def action_confirm(self):
+#         internal_transfer_account_id = int(self.env['ir.config_parameter'].sudo().get_param('internal_transfer_account_id'))
+#
+#         if not internal_transfer_account_id:
+#             raise UserError('Please Select Internal Transfer Account in configuration')
+#         else:
+#             account_debit = int(internal_transfer_account_id)
+#
+#         if self.location_id.usage == 'transit' and self.picking_type_id.code == 'internal':
+#             for line in self.move_ids_without_package:
+#                 self.move(line.product_id.categ_id.property_stock_journal.id,
+#                           line.unit_inventory_cost * line.quantity_done, account_debit,
+#                           line.product_id.categ_id.property_stock_valuation_account_id.id, self.name)
+#         if self.location_dest_id.usage == 'transit' and self.picking_type_id.code == 'internal':
+#             if self.move_ids_without_package:
+#                 for line in self.move_ids_without_package:
+#                     self.move(line.product_id.categ_id.property_stock_journal.id,
+#                               line.unit_inventory_cost * line.quantity_done,
+#                               line.product_id.categ_id.property_stock_valuation_account_id.id, account_debit, self.name)
+#
+#         self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
+#         # call `_action_confirm` on every draft move
+#         self.mapped('move_lines') \
+#             .filtered(lambda move: move.state == 'draft') \
+#             ._action_confirm()
+#         # call `_action_assign` on every confirmed move which location_id bypasses the reservation
+#         self.filtered(lambda picking: picking.location_id.usage in (
+#             'supplier', 'inventory', 'production') and picking.state == 'confirmed') \
+#             .mapped('move_lines')._action_assign()
+#         return True
+#
+#     def move(self, journal_id, amount, account_credit, account_debit, name):
+#         lines = [
+#             (0, 0, {
+#                 'name': str(name),
+#                 'account_id': account_credit,
+#                 'debit': 0,
+#                 'credit': amount,
+#                 'partner_id': self.partner_id.id,
+#                 'date_maturity': fields.Date.today(),
+#
+#             }),
+#             (0, 0, {
+#                 'name': '/',
+#                 'account_id': account_debit,
+#                 'debit': amount,
+#                 'credit': 0,
+#                 'partner_id': self.partner_id.id,
+#                 'date_maturity': fields.Date.today(),
+#             })
+#         ]
+#         move_id = self.env['account.move'].create({
+#             'date': fields.Date.today(),
+#             'journal_id': journal_id,
+#             'ref': name,
+#             'line_ids': lines,
+#             'analytic_account_id': self.analytic_id.id,
+#
+#         })
+#         move_id.post()
 
 
 class AccountMove(models.Model):
@@ -216,39 +215,6 @@ class StockMove(models.Model):
 
     is_force_cost = fields.Boolean(string='Force Cost', default=True)
 
-    def _create_account_move_line(self, credit_account_id, debit_account_id, journal_id):
-        self.ensure_one()
-        AccountMove = self.env['account.move']
-        quantity = self.env.context.get('forced_quantity', self.product_qty)
-        quantity = quantity if self._is_in() else -1 * quantity
-
-        # Make an informative `ref` on the created account move to differentiate between classic
-        # movements, vacuum and edition of past moves.
-        ref = self.picking_id.name
-        if self.env.context.get('force_valuation_amount'):
-            if self.env.context.get('forced_quantity') == 0:
-                ref = 'Revaluation of %s (negative inventory)' % ref
-            elif self.env.context.get('forced_quantity') is not None:
-                ref = 'Correction of %s (modification of past move)' % ref
-
-        move_lines = self.with_context(forced_ref=ref)._prepare_account_move_line(quantity, abs(self.value),
-                                                                                  credit_account_id, debit_account_id)
-        analytic_account_id = 0
-        if move_lines:
-            inventory = self.env['stock.inventory.line'].search(
-                [('inventory_id', '=', self.inventory_id.id), ('product_id', '=', self.product_id.id)])
-            if inventory:
-                analytic_account_id = inventory.analytic_account_id.id
-            date = self._context.get('force_period_date', fields.Date.context_today(self))
-            new_account_move = AccountMove.sudo().create({
-                'journal_id': journal_id,
-                'line_ids': move_lines,
-                'date': date,
-                'ref': ref,
-                'stock_move_id': self.id,
-                'analytic_account_id': analytic_account_id
-            })
-            new_account_move.post()
 
     # def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id):
     #     """

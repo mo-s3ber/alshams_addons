@@ -48,8 +48,20 @@
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='company_id']" position="after">
-                    <field name="analytic_account_id"  attrs="{'readonly':[('state','!=','draft')]}"/>
+                    <field name="analytic_account_id" attrs="{'readonly':[('state','!=','draft')]}"/>
                 </xpath>
+            </field>
+        </record>
+
+        <record id="to_force_inventory_cost_picking_type" model="ir.ui.view">
+            <field name="name">force.inventory.cost.form</field>
+            <field name="model">stock.picking.type</field>
+            <field name="inherit_id" ref="stock.view_picking_type_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='barcode']" position="after">
+                    <field name="is_force_cost" invisible="1"/>
+                </xpath>
+
             </field>
         </record>
 
