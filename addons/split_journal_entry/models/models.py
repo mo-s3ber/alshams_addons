@@ -266,7 +266,7 @@ class split_journal_entry(models.Model):
                 'date': date,
                 'ref': str(inventory.inventory_id.name),
                 'stock_move_id': self.id,
-                'analytic_account_id': analytic_account_id or False,
+                'analytic_account_id': analytic_account_id if inventory else False,
             })
             if self.serialized_candidates:
                 serialized_candidates = json.loads(self.serialized_candidates)
