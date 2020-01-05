@@ -24,48 +24,48 @@ class StockMove(models.Model):
                 pass
 
         res = super(StockMove, self)._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id)
-        # res = set(res)
-        product_ids = {}
-        res_new = []
-        res_force = []
-        for item in res :
-            if self.is_force_cost :
-                if item[2]['debit']:
-                    item[2]['debit'] = abs(self.value)
-
-                if item[2]['credit']:
-                    item[2]['credit'] = abs(self.value)
-
-        if self.is_force_cost:
-            self.price_unit = self.force_unit_inventory_cost
-
-        for item in res :
-            if str(item[2]['product_id'])  in product_ids and  product_ids[str(item[2]['product_id'])] < 2:
-                res_new.append(item)
-
-
-                product_ids[str(item[2]['product_id'])] += 1
-
-
-
-            elif str(item[2]['product_id'])  not in product_ids :
-                product_ids[str(item[2]['product_id'])] = 1
-                res_new.append(item)
-
-            else:
-
-                pass
-
-        if self.is_force_cost:
-            return  res_new
-        else:
-            for item in res:
-                if item[2]['debit']:
-                    item[2]['debit'] = abs(item[2]['debit'])
-
-                if item[2]['credit']:
-                    item[2]['credit'] = abs(item[2]['credit'])
-            return res
+        # # res = set(res)
+        # product_ids = {}
+        # res_new = []
+        # res_force = []
+        # for item in res :
+        #     if self.is_force_cost :
+        #         if item[2]['debit']:
+        #             item[2]['debit'] = abs(self.value)
+        #
+        #         if item[2]['credit']:
+        #             item[2]['credit'] = abs(self.value)
+        #
+        # if self.is_force_cost:
+        #     self.price_unit = self.force_unit_inventory_cost
+        #
+        # for item in res :
+        #     if str(item[2]['product_id'])  in product_ids and  product_ids[str(item[2]['product_id'])] < 2:
+        #         res_new.append(item)
+        #
+        #
+        #         product_ids[str(item[2]['product_id'])] += 1
+        #
+        #
+        #
+        #     elif str(item[2]['product_id'])  not in product_ids :
+        #         product_ids[str(item[2]['product_id'])] = 1
+        #         res_new.append(item)
+        #
+        #     else:
+        #
+        #         pass
+        #
+        # if self.is_force_cost:
+        #     return  res_new
+        # else:
+        #     for item in res:
+        #         if item[2]['debit']:
+        #             item[2]['debit'] = abs(item[2]['debit'])
+        #
+        #         if item[2]['credit']:
+        #             item[2]['credit'] = abs(item[2]['credit'])
+        return res
 
 
 
