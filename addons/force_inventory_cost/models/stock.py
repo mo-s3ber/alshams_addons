@@ -14,16 +14,16 @@ class StockMove(models.Model):
 
     is_force_cost = fields.Boolean(string='Force Cost', default=True)
 
-    def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id):
-
-        inventory = self.env['stock.inventory.line'].search([('inventory_id', '=',self.inventory_id.id), ('product_id', '=', self.product_id.id)])
-        if inventory:
-            if inventory.is_force_cost:
-                cost = inventory.force_unit_inventory_cost
-            else:
-                pass
-
-        res = super(StockMove, self)._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id)
+    # def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id):
+    #
+    #     inventory = self.env['stock.inventory.line'].search([('inventory_id', '=',self.inventory_id.id), ('product_id', '=', self.product_id.id)])
+    #     if inventory:
+    #         if inventory.is_force_cost:
+    #             cost = inventory.force_unit_inventory_cost
+    #         else:
+    #             pass
+    #
+    #     res = super(StockMove, self)._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id)
         # # res = set(res)
         # product_ids = {}
         # res_new = []
@@ -65,7 +65,7 @@ class StockMove(models.Model):
         #
         #         if item[2]['credit']:
         #             item[2]['credit'] = abs(item[2]['credit'])
-        return res
+        # return res
 
 
 
