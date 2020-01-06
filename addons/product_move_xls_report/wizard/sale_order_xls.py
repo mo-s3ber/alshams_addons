@@ -142,7 +142,7 @@ class ProductMoveReport(models.TransientModel):
                 else:
                     worksheet.write(row, col + 7, "", custom_format)
                 if balance:
-                    worksheet.write(row, col + 8, balance, custom_format)
+                    worksheet.write(row, col + 8, round(balance,2), custom_format)
                 else:
                     worksheet.write(row, col + 8, "", custom_format)
                 if line.picking_id.partner_id.name:
