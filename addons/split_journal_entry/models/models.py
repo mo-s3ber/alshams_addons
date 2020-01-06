@@ -348,15 +348,13 @@ class split_journal_entry(models.Model):
                 'stock_move_id': self.id,
                 'analytic_account_id': analytic_account_id,
             })
-            if self.serialized_candidates:
-                serialized_candidates = json.loads(self.serialized_candidates)
-                for serialized_candidate in serialized_candidates:
-                    for invoice in self.env['stock.move'].browse(serialized_candidate['id']).purchase_line_id.order_id.invoice_ids:
-                        if invoice.state in [False,'draft','cancel']:
-                            return
-                new_account_move.post()
-
-            # new_account_move.post()
+            # if self.serialized_candidates:
+            #     serialized_candidates = json.loads(self.serialized_candidates)
+            #     for serialized_candidate in serialized_candidates:
+            #         for invoice in self.env['stock.move'].browse(serialized_candidate['id']).purchase_line_id.order_id.invoice_ids:
+            #             if invoice.state in [False,'draft','cancel']:
+            #                 return
+            new_account_move.post()
 
     @api.model
     def _get_in_base_domain(self, company_id=False):
