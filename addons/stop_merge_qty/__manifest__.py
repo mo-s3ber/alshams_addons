@@ -1,5 +1,5 @@
 {
-    'name': 'Split Same Info Picking',
+    'name': 'Stop Merge Quantity',
     'version': '12.0.0.1',
     'summary': "create picking for each picking created automatic in the system without looking if picking have same info or not",
     'description': "create picking for each picking created automatic in the system without looking if picking have same info or not",

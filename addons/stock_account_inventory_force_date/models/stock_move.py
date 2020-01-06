@@ -84,7 +84,7 @@ class StockMove(models.Model):
         ], order="datetime asc")
         old_cost = self.price_unit
         for rec in recs:
-            self._create_move_price_history(rec, old_cost)
+            # self._create_move_price_history(rec, old_cost)
             old_cost = rec.cost
 
     def _run_valuation(self, quantity=None):

@@ -6,8 +6,6 @@ class Stock_move(models.Model):
 
     def _search_picking_for_assignation(self):
         self.ensure_one()
-        # if not self.env.user.company_id.stop_merge:
-        #     return super(Stock_move, self)._search_picking_for_assignation()
         picking = self.env['stock.picking'].search([
             ('group_id', '=', self.group_id.id),
             ('origin', '=', self.origin),

@@ -97,7 +97,8 @@ class ProductMoveReport(models.TransientModel):
         worksheet.write(row, 8, 'Balance', table_header_format)
         worksheet.write(row, 9, 'Partner', table_header_format)
         worksheet.write(row, 10, 'Cost', table_header_format)
-        worksheet.write(row, 11, 'Source Document', table_header_format)
+        worksheet.write(row, 11, 'Unit Inventory Cost', table_header_format)
+        worksheet.write(row, 12, 'Source Document', table_header_format)
 
         row +=1
         col = 0
@@ -149,13 +150,20 @@ class ProductMoveReport(models.TransientModel):
                 else:
                     worksheet.write(row, col + 9, "", custom_format)
                 if line.move_id.price_unit:
-                    worksheet.write(row, col + 10, line.move_id.price_unit, custom_format)
+                    worksheet.write(row, col + 10, round(line.move_id.price_unit,2), custom_format)
                 else:
                     worksheet.write(row, col + 10, "", custom_format)
-                if line.picking_id.origin:
-                    worksheet.write(row, col + 11, line.picking_id.origin, custom_format)
+                if line.move_id.unit_inventory_cost or line.move_id.force_unit_inventory_cost:
+                    if line.move_id.unit_inventory_cost:
+                        worksheet.write(row, col + 11, round(line.move_id.unit_inventory_cost,2), custom_format)
+                    if line.move_id.force_unit_inventory_cost:
+                        worksheet.write(row, col + 11, round(line.move_id.force_unit_inventory_cost,2), custom_format)
                 else:
                     worksheet.write(row, col + 11, "", custom_format)
+                if line.picking_id.origin:
+                    worksheet.write(row, col + 12, line.picking_id.origin, custom_format)
+                else:
+                    worksheet.write(row, col + 12, "", custom_format)
                 row +=1
         else:
             raise ValidationError("Nothing to Print!")

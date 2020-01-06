@@ -1,0 +1,1 @@
+from . import stock_config,stock_move_inherit
