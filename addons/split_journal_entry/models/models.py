@@ -158,7 +158,6 @@ class StockMove(models.Model):
 
     @api.multi
     def action_done(self):
-    	"""Function to update the price, (added after)"""
         res = super(StockMove, self).action_done()
         self.product_price_update_after_done()
         return res

@@ -15,7 +15,7 @@ class adding_analytic_account(models.Model):
 class StockInventoryLine(models.Model):
     _inherit = 'stock.inventory.line'
 
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account',default=lambda self: self.inventory_id.analytic_account_id.id)
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
 
     def _get_move_values(self, qty, location_id, location_dest_id, out,analytic_account,price_unit):
         self.ensure_one()
