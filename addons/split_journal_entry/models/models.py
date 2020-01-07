@@ -292,7 +292,7 @@ class StockMove(models.Model):
                 [('inventory_id', '=', self.inventory_id.id), ('product_id', '=', self.product_id.id)])
             analytic_account_id = False
             if inventory:
-                analytic_account_id = self.inventory_id.analytic_account_id.id
+                analytic_account_id = inventory.analytic_account_id.id
                 ref = self.inventory_id.name
                 if self.inventory_id.accounting_date:
                     date = self.inventory_id.accounting_date
