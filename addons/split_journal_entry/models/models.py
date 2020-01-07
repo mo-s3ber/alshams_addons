@@ -280,7 +280,8 @@ class StockMove(models.Model):
             if inventory:
                 analytic_account_id = inventory.analytic_account_id.id
                 ref = self.inventory_id.name
-                date = self.inventory_id.accounting_date
+                if self.inventory_id.accounting_date:
+                    date = self.inventory_id.accounting_date
             if self.picking_id:
                 analytic_account_id = self.picking_id.analytic_id.id
 

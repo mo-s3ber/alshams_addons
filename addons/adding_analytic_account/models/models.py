@@ -54,10 +54,11 @@ class StockInventoryLine(models.Model):
             if float_utils.float_compare(line.theoretical_qty, line.product_qty, precision_rounding=line.product_id.uom_id.rounding) == 0:
                 continue
             diff = line.theoretical_qty - line.product_qty
+            price= line.force_unit_inventory_cost or line.unit_inventory_cost
             if diff < 0:  # found more than expected
-                vals = line._get_move_values(abs(diff), line.product_id.property_stock_inventory.id, line.location_id.id, False,line.analytic_account_id.id,line.force_unit_inventory_cost)
+                vals = line._get_move_values(abs(diff), line.product_id.property_stock_inventory.id, line.location_id.id, False,line.analytic_account_id.id,price)
             else:
-                vals = line._get_move_values(abs(diff), line.location_id.id, line.product_id.property_stock_inventory.id, True,line.analytic_account_id.id,line.force_unit_inventory_cost)
+                vals = line._get_move_values(abs(diff), line.location_id.id, line.product_id.property_stock_inventory.id, True,line.analytic_account_id.id,price)
             vals_list.append(vals)
         return self.env['stock.move'].create(vals_list)
 
