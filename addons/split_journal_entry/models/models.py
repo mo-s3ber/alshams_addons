@@ -149,6 +149,20 @@ class StockMove(models.Model):
                 'price_unit': self.force_unit_inventory_cost or self.unit_inventory_cost,
             })
 
+    def product_price_update_after_done(self):
+        if self.inventory_id:
+            if self.force_unit_inventory_cost or self.unit_inventory_cost:
+                self.write({
+                    'price_unit': self.force_unit_inventory_cost or self.unit_inventory_cost,
+                })
+
+    @api.multi
+    def action_done(self):
+    	"""Function to update the price, (added after)"""
+        res = super(StockMove, self).action_done()
+        self.product_price_update_after_done()
+        return res
+
     # def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id):
     #     # This method returns a dictonary to provide an easy extension hook to modify the valuation lines (see purchase for an example)
     #     self.ensure_one()
@@ -278,7 +292,7 @@ class StockMove(models.Model):
                 [('inventory_id', '=', self.inventory_id.id), ('product_id', '=', self.product_id.id)])
             analytic_account_id = False
             if inventory:
-                analytic_account_id = inventory.analytic_account_id.id
+                analytic_account_id = self.inventory_id.analytic_account_id.id
                 ref = self.inventory_id.name
                 if self.inventory_id.accounting_date:
                     date = self.inventory_id.accounting_date

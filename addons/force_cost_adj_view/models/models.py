@@ -194,6 +194,13 @@ class AccountMove(models.Model):
 
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
 
+    @api.onchange('stock_move_id')
+    @api.constrains('stock_move_id')
+    def onchange_ref(self):
+        if self.stock_move_id:
+            if self.stock_move_id.inventory_id:
+                self.ref = self.stock_move_id.inventory_id.name
+
     @api.onchange('analytic_account_id')
     @api.constrains('analytic_account_id')
     def set_analytic_account_lines(self):
