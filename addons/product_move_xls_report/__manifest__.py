@@ -9,7 +9,7 @@
     'author': 'HK',
     'license': "OPL-1",
     'depends': [
-        'stock'
+        'stock','split_journal_entry'
     ],
     'data': [
         'wizard/sale_order_xls_view.xml',
