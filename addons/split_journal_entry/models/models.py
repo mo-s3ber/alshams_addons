@@ -273,19 +273,22 @@ class StockMove(models.Model):
 
         move_lines = self._prepare_account_move_line(quantity, abs(self.value), credit_account_id, debit_account_id)
         if move_lines:
+            date = self._context.get('force_period_date', fields.Date.context_today(self))
             inventory = self.env['stock.inventory.line'].search(
                 [('inventory_id', '=', self.inventory_id.id), ('product_id', '=', self.product_id.id)])
             analytic_account_id = False
             if inventory:
                 analytic_account_id = inventory.analytic_account_id.id
+                ref = self.inventory_id.name
+                date = self.inventory_id.accounting_date
             if self.picking_id:
                 analytic_account_id = self.picking_id.analytic_id.id
-            date = self._context.get('force_period_date', fields.Date.context_today(self))
+
             new_account_move = AccountMove.sudo().create({
                 'journal_id': journal_id,
                 'line_ids': move_lines,
                 'date': date,
-                'ref': str(inventory.inventory_id.name),
+                'ref': ref,
                 'stock_move_id': self.id,
                 'analytic_account_id': analytic_account_id,
             })

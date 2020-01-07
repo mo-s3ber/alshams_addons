@@ -55,9 +55,9 @@ class StockInventoryLine(models.Model):
                 continue
             diff = line.theoretical_qty - line.product_qty
             if diff < 0:  # found more than expected
-                vals = line._get_move_values(abs(diff), line.product_id.property_stock_inventory.id, line.location_id.id, False,line.analytic_account_id,line.force_unit_inventory_cost)
+                vals = line._get_move_values(abs(diff), line.product_id.property_stock_inventory.id, line.location_id.id, False,line.analytic_account_id.id,line.force_unit_inventory_cost)
             else:
-                vals = line._get_move_values(abs(diff), line.location_id.id, line.product_id.property_stock_inventory.id, True,line.analytic_account_id,line.force_unit_inventory_cost)
+                vals = line._get_move_values(abs(diff), line.location_id.id, line.product_id.property_stock_inventory.id, True,line.analytic_account_id.id,line.force_unit_inventory_cost)
             vals_list.append(vals)
         return self.env['stock.move'].create(vals_list)
 
