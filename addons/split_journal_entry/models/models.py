@@ -151,14 +151,14 @@ class StockMove(models.Model):
 
     def product_price_update_after_done(self):
         if self.inventory_id:
-            if self.force_unit_inventory_cost or self.unit_inventory_cost:
-                if self.force_unit_inventory_cost:
+            if self.inventory_id.force_unit_inventory_cost or self.inventory_id.unit_inventory_cost:
+                if self.inventory_id.force_unit_inventory_cost:
                     self.write({
-                        'price_unit': self.force_unit_inventory_cost,
+                        'price_unit': self.inventory_id.force_unit_inventory_cost,
                     })
-                if self.unit_inventory_cost:
+                if self.inventory_id.unit_inventory_cost:
                     self.write({
-                        'price_unit': self.unit_inventory_cost,
+                        'price_unit': self.inventory_id.unit_inventory_cost,
                     })
 
     @api.multi
