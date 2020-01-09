@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2015 DevIntelle Consulting Service Pvt.Ltd (<http://www.devintellecs.com>).
+
+For Module Support : devintelle@gmail.com  or Skype : devintelle 
+ -->
+<odoo>
+    <!--move form-->
+    <record id="dev_cemix_remark_stock_move_form_inherit" model="ir.ui.view">
+        <field name="name">dev.cemix.remark.stock.move.form.inherit</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='main_grp_col2']//field[@name='date']" position="after">
+                <field name="date_expected"/>
+                <field name="remark"/>
+            </xpath>
+        </field>
+    </record>
+    <!--move tree-->
+    <record id="dev_stock_move_tree_inherit" model="ir.ui.view">
+        <field name="name">dev.stock.move.tree.inherit</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location_dest_id']" position="after">
+                <field name="date_expected"/>
+                <field name="remark"/>
+            </xpath>
+        </field>
+    </record>
+    <!--picking move form-->
+    <record id="dev_stock_move_picking_form_inherit" model="ir.ui.view">
+        <field name="name">dev.stock.move.picking.form.inherit</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_expected']" position="after">
+                <field name="remark"/>
+            </xpath>
+        </field>
+    </record>
+    <!--picking move tree-->
+    <record id="dev_stock_move_picking_tree_inherit" model="ir.ui.view">
+        <field name="name">dev.stock.move.picking.tree.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='product_id']" position="after">
+                <field name="date_expected"/>
+                <field name="remark"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
