@@ -198,14 +198,12 @@ class AccountCheckPayment(models.Model):
 
             move_id = self.env['account.move'].create({
                 'ref': str(line.name),
-                'branch_id': line.branch_id.id,
                 'journal_id': line.journal_id.id,
             })
 
             sale_move_lines = self.env['account.move.line'].with_context(check_move_validity=False)
             sale_move_lines |= sale_move_lines.create({
                 'name': str(line.communication),
-                'branch_id': line.branch_id.id,
                 'account_id': line.journal_id.debit_check_account_id.id,
                 'debit': line.amount,
                 'move_id': move_id.id,
@@ -217,7 +215,6 @@ class AccountCheckPayment(models.Model):
             sale_move_lines |= sale_move_lines.create({
                 'name': str(line.communication),
                 'account_id': line.partner_id.property_account_receivable_id.id,
-                'branch_id': line.branch_id.id,
                 # 'analytic_account_id': line.account_analytic_id.id,
                 'credit': line.amount,
                 'collected_id': self.id,

@@ -161,7 +161,7 @@ class AccountCheckDeposit(models.Model):
             journal_id = deposit.journal_id.id
         move_vals = {
             'journal_id': journal_id,
-            'branch_id': self.branch_id.id,
+            # 'branch_id': self.branch_id.id,
             'date': deposit.deposit_date,
             'name': _('Check Deposit %s') % deposit.name,
             'ref': deposit.name,
@@ -178,8 +178,8 @@ class AccountCheckDeposit(models.Model):
             'account_id': self.journal_id.default_credit_account_id.id,
             'partner_id': line.partner_id.id,
             'currency_id': line.currency_id.id or False,
-            'analytic_account_id': self.branch_id.analytic_account_id.id,
-            'analytic_tag_ids': [(6, 0, self.branch_id.analytic_tags_ids.ids)],
+            # 'analytic_account_id': self.branch_id.analytic_account_id.id,
+            # 'analytic_tag_ids': [(6, 0, self.branch_id.analytic_tags_ids.ids)],
             'amount_currency': line.amount_currency * -1,
         }
 
@@ -212,8 +212,8 @@ class AccountCheckDeposit(models.Model):
             'partner_id': line.partner_id.id,
             'currency_id': deposit.currency_none_same_company_id.id or False,
             'amount_currency': line.currency_id.id,
-            'analytic_account_id': self.branch_id.analytic_account_id.id,
-            'analytic_tag_ids': [(6, 0, self.branch_id.analytic_tags_ids.ids)],
+            # 'analytic_account_id': self.branch_id.analytic_account_id.id,
+            # 'analytic_tag_ids': [(6, 0, self.branch_id.analytic_tags_ids.ids)],
         }
 
     @api.multi
