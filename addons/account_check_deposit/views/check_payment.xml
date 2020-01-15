@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_payment_form_inherit_check" model="ir.ui.view">
+        <field name="name">account.payment.form.inherit</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button"
+                        name="button_journal_entries_collected"
+                        string="Collected Items"
+                        states="collected"
+                        type="object"
+                        icon="fa-arrows-v"/>
+            </div>
+
+            <field name="payment_date" position="before">
+                <field name="payment_type_check" widget="radio"/>
+            </field>
+            <xpath expr="//header" position="inside">
+                <button name="action_collected"
+                        attrs="{'invisible': ['|','|','|',('current_state', '=', 'collected'),('payment_type_check', '!=', 'check'),('check_deposit_id', '=', False)]}"
+                        class="btn-success"
+                        string="Collected"
+                        type="object"/>
+            </xpath>
+            <field name="communication" position="replace">
+                <field name="communication"
+                       attrs="{'readonly': [('state', '!=', 'draft')],'required': [('payment_type_check', '=', 'check')]}"/>
+            </field>
+
+
+            <field name="payment_date" position="after">
+                <field name="due_date"
+                       attrs="{'invisible': [('payment_type_check', '=', 'payment')],
+                       'readonly': [('state', '!=', 'draft')],
+                       'required': [('payment_type_check', '!=', 'payment')]}"/>
+            </field>
+
+            <field name="payment_transaction_id" position="after">
+                <field name="test" invisible="1"/>
+                <field name="date_now" invisible="1"/>
+                <field name="test_state" invisible="1"/>
+                <field name="partner_bank"
+                       attrs="{'readonly': [('state', '!=', 'draft')],'invisible': [('payment_type_check', '=', 'payment')]}"/>
+                <field name="current_state" attrs="{'invisible': [('check_deposit_id', '=', False)]}"/>
+                 <field name="check_deposit_id" readonly='1'
+                       attrs="{'invisible': ['|',('check_deposit_id', '=', False),('payment_type_check', '=', 'payment')]}"
+                />
+            </field>
+        </field>
+    </record>
+
+
+    <record id="account.view_account_payment_tree" model="ir.ui.view">
+        <field name="name">account.payment.tree.check</field>
+        <field name="model">account.payment</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="due_date == date_now and current_state=='not_collected'"
+                  decoration-bf="due_date == date_now and current_state=='not_collected'"
+                  decoration-it="due_date == date_now and current_state=='not_collected'"
+                  decoration-success="is_current_week == True and current_state=='not_collected'"
+                  edit="false">
+                <field name="date_now" invisible="1"/>
+                <field name="is_current_week" invisible="1"/>
+                <field name="payment_date"/>
+                <field name="due_date"/>
+                <field name="communication"/>
+                <field name="partner_bank"/>
+                <field name="name"/>
+                <field name="journal_id"/>
+                <field name="payment_method_id"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="amount" sum="Amount"/>
+                <field name="current_state"/>
+                <field name="state"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="partner_type" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="account.view_bank_statement_form" model="ir.ui.view">
+        <field name="name">account.bank.statement.form</field>
+        <field name="model">account.bank.statement</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <form string="Bank Statement">
+                <header>
+                    <field name="all_lines_reconciled" invisible="1"/>
+                    <button name="%(account.action_bank_reconcile_bank_statements)d" string="Reconcile" type="action"
+                            class="oe_highlight"
+                            attrs="{'invisible':['|','|',('all_lines_reconciled','=',True),('line_ids','=',[]),('state', '!=', 'open')]}"/>
+                    <button name="check_confirm_bank" string="Validate" type="object" class="oe_highlight"
+                            attrs="{'invisible':['|','|',('all_lines_reconciled','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="open,confirm"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="button_journal_entries"
+                                string="Journal Entries" type="object"
+                                attrs="{'invisible':[('move_line_count','=', 0)]}" icon="fa-bars"/>
+                        <field name="move_line_count" invisible="1"/>
+
+                    </div>
+                    <div class="oe_title oe_inline">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="journal_type" invisible="1"/>
+                            <field name="cashbox_start_id" invisible="1"/>
+                            <field name="cashbox_end_id" invisible="1"/>
+                            <field name="journal_id" domain="[('type', '=', journal_type)]"
+                                   attrs="{'readonly': [('move_line_count','!=', 0)]}" widget="selection"/>
+                            <field name="date"/>
+                            <field name='company_id' options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <label for="balance_start"/>
+                            <div>
+                                <field class="oe_inline" name="balance_start"/>
+                                <button class="oe_inline oe_link oe_edit_only"
+                                        name="%(account.action_view_account_bnk_stmt_cashbox)d"
+                                        string="&#8594; Count" type="action"
+                                        attrs="{'invisible':['|','|',('state','!=','open'),('journal_type','!=','cash'),('cashbox_start_id','!=',False)]}"
+                                        context="{'balance':'start'}"/>
+                                <button name="open_cashbox_id"
+                                        attrs="{'invisible': ['|','|',('state','!=','open'),('journal_type','!=','cash'),('cashbox_start_id', '=', False)]}"
+                                        string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline"
+                                        context="{'balance':'start', 'cashbox_id': cashbox_start_id}"/>
+                            </div>
+                            <label for="balance_end_real"/>
+                            <div>
+                                <field class="oe_inline" name="balance_end_real"/>
+                                <button class="oe_inline oe_link oe_edit_only"
+                                        name="%(account.action_view_account_bnk_stmt_cashbox)d"
+                                        string="&#8594; Count" type="action"
+                                        attrs="{'invisible':['|','|',('state','!=','open'),('journal_type','!=','cash'),('cashbox_end_id','!=',False)]}"
+                                        context="{'balance':'close'}"/>
+                                <button name="open_cashbox_id"
+                                        attrs="{'invisible': ['|','|',('state','!=','open'),('journal_type','!=','cash'),('cashbox_end_id', '=', False)]}"
+                                        string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline"
+                                        context="{'balance':'close', 'cashbox_id': cashbox_end_id}"/>
+                            </div>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Transactions" name="statement_line_ids">
+                            <field name="line_ids" context="{'date':date}">
+                                <tree editable="bottom" string="Statement lines" decoration-muted="journal_entry_ids">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="journal_entry_ids" invisible="1"/>
+                                    <field name="date" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                    <field name="name" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                    <field name="partner_id"
+                                           domain="['|',('parent_id','=',False),('is_company','=',True)]"
+                                           context="{'default_supplier': 1}"
+                                           attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                    <field name="ref" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"
+                                           groups="base.group_no_one"/>
+                                    <field name="amount" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                    <field name="journal_currency_id" invisible="1"/>
+                                    <field name="amount_currency"
+                                           attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                    <field name="currency_id" options="{'no_create': True}" invisible="1"
+                                           attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                    <field name="bank_account_id" invisible="1"
+                                           attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"
+                                           domain="['|', ('partner_id', '=', partner_id), ('partner_id', '=', False)]"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                        <div class="oe_subtotal_footer_separator oe_inline">
+                            <label for="balance_end"/>
+                        </div>
+                        <field name="balance_end" nolabel="1" class="oe_subtotal_footer_separator"/>
+                    </group>
+                    <div class="oe_clear"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="account.view_account_payment_search" model="ir.ui.view">
+        <field name="name">account.payment.search</field>
+        <field name="model">account.payment</field>
+        <field name="arch" type="xml">
+            <search string="Payments">
+                <field name="name" filter_domain="['|', ('name','ilike',self), ('communication','ilike',self)]"
+                       string="Description"/>
+                <separator/>
+                <field name="date_now"/>
+                <field name="due_date"/>
+                <field name="partner_id"/>
+                <field name="journal_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter string="Vendor Payments" domain="[('payment_type','=','outbound')]" name="outbound_filter"/>
+                <filter string="Customer Payments" domain="[('payment_type','=','inbound')]" name="inbound_filter"/>
+                <filter string="Transfers" domain="[('payment_type','=','transfer')]" name="transfers_filter"/>
+                <separator/>
+                <filter string="Draft" domain="[('state','=','draft')]" name='state_draft'/>
+                <filter string="Posted" domain="[('state','=','posted')]" name='state_posted'/>
+                <filter string="Sent" domain="[('state','=','sent')]" name='state_sent'/>
+                <filter string="Reconciled" name="reconciled" domain="[('state','=','reconciled')]"/>
+                <separator/>
+                <filter string="Today" name="current_date"
+                        domain="[('due_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),
+                ('due_date', '&lt;=',datetime.datetime.now().strftime('%Y-%m-%d 23:23:59'))]"/>
+
+                <filter string="Current Week" name="current_week"
+                        domain="[('due_date','&lt;',(context_today()+relativedelta(days=7)).strftime('%Y-%m-%d 23:59:59')),
+                ('due_date','&gt;=',context_today().strftime('%Y-%m-%d 00:00:00'))]"/>
+
+                <filter string="Current Month" name="current_month"
+                        domain="[('due_date','&lt;',(context_today()+relativedelta(months=1)).strftime('%%Y-%%m-01')), ('due_date','&gt;=',time.strftime('%%Y-%%m-01'))]"/>
+
+                <filter string="Current Year" name="year"
+                        domain="[('due_date','&lt;=', time.strftime('%%Y-12-31')),('due_date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+
+                <separator/>
+                <filter string="Partner" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
+                <filter string="Payment Method" name="paymentmethod" domain="[]"
+                        context="{'group_by': 'payment_method_id'}"/>
+                <filter string="State" name="state" domain="[]" context="{'group_by': 'state'}"/>
+                <filter string="Currency" name="currency" domain="[]" context="{'group_by': 'currency_id'}"
+                        groups="base.group_multi_currency"/>
+                <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}"
+                        groups="base.group_multi_company"/>
+            </search>
+        </field>
+    </record>
+</odoo>
