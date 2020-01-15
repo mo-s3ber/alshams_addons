@@ -7,7 +7,7 @@
             <field name="model">account.journal</field>
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//notebook/page/group/group/field[@name='is_visa']" position="after">
+                <xpath expr="//notebook/page/group/group/field[@name='inbound_payment_method_ids']" position="after">
                     <field name="is_check"/>
                 </xpath>
                 <xpath expr="//notebook/page[@name='advanced_settings']/group" position="inside">
