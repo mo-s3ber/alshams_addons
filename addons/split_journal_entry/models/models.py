@@ -265,16 +265,15 @@ class StockMove(models.Model):
                 ref = 'Revaluation of %s (negative inventory)' % ref
             elif self.env.context.get('forced_quantity') is not None:
                 ref = 'Correction of %s (modification of past move)' % ref
-
-        if self.force_unit_inventory_cost:
-            self.write({
-                'value': self.force_unit_inventory_cost * self.quantity_done,
-            })
-
-        elif self.unit_inventory_cost:
-            self.write({
-                'value': self.unit_inventory_cost * self.quantity_done,
-            })
+        if self.purchase_line_id and self.product_id.id == self.purchase_line_id.product_id.id:
+            if self.force_unit_inventory_cost:
+                self.write({
+                    'value': self.force_unit_inventory_cost * self.quantity_done,
+                })
+            elif self.unit_inventory_cost:
+                self.write({
+                    'value': self.unit_inventory_cost * self.quantity_done,
+                })
         inventory = self.env['stock.inventory.line'].search(
             [('inventory_id', '=', self.inventory_id.id), ('product_id', '=', self.product_id.id)])
         if inventory:
