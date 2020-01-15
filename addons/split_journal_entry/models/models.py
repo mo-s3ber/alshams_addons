@@ -269,13 +269,11 @@ class StockMove(models.Model):
         if self.force_unit_inventory_cost:
             self.write({
                 'value': self.force_unit_inventory_cost * self.quantity_done,
-                'price_unit': self.force_unit_inventory_cost,
             })
 
         elif self.unit_inventory_cost:
             self.write({
                 'value': self.unit_inventory_cost * self.quantity_done,
-                'price_unit': self.unit_inventory_cost,
             })
         inventory = self.env['stock.inventory.line'].search(
             [('inventory_id', '=', self.inventory_id.id), ('product_id', '=', self.product_id.id)])
