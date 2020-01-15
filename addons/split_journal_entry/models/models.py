@@ -265,23 +265,31 @@ class StockMove(models.Model):
                 ref = 'Revaluation of %s (negative inventory)' % ref
             elif self.env.context.get('forced_quantity') is not None:
                 ref = 'Correction of %s (modification of past move)' % ref
-        if self.purchase_line_id and self.product_id.id == self.purchase_line_id.product_id.id:
-            if self.force_unit_inventory_cost:
-                self.write({
-                    'value': self.force_unit_inventory_cost * self.quantity_done,
-                })
-            elif self.unit_inventory_cost:
-                self.write({
-                    'value': self.unit_inventory_cost * self.quantity_done,
-                })
+        # if self.purchase_line_id and self.product_id.id == self.purchase_line_id.product_id.id:
+        #     if self.force_unit_inventory_cost:
+        #         self.write({
+        #             'value': self.force_unit_inventory_cost * self.quantity_done,
+        #         })
+        #     elif self.unit_inventory_cost:
+        #         self.write({
+        #             'value': self.unit_inventory_cost * self.quantity_done,
+        #         })
+        if self.is_force_cost and self.picking_id.picking_type_id.is_force_cost and self.force_unit_inventory_cost:
+            self.value = self.force_unit_inventory_cost * self.quantity_done
+
+        if self.is_force_cost and self.picking_id.picking_type_id.is_force_cost and self.unit_inventory_cost:
+            self.value = self.unit_inventory_cost * self.quantity_done
+
         inventory = self.env['stock.inventory.line'].search(
             [('inventory_id', '=', self.inventory_id.id), ('product_id', '=', self.product_id.id)])
         if inventory:
-            if inventory.force_unit_inventory_cost:
-                self.write({
-                    'value': inventory.force_unit_inventory_cost * self.quantity_done,
-                    'price_unit': inventory.force_unit_inventory_cost,
-                })
+            # if inventory.force_unit_inventory_cost:
+            #     self.write({
+            #         'value': inventory.force_unit_inventory_cost * self.quantity_done,
+            #         'price_unit': inventory.force_unit_inventory_cost,
+            #     })
+            if inventory.is_force_cost and inventory.force_unit_inventory_cost:
+                self.value = inventory.force_unit_inventory_cost * self.quantity_done
 
 
         move_lines = self._prepare_account_move_line(quantity, abs(self.value), credit_account_id, debit_account_id)
