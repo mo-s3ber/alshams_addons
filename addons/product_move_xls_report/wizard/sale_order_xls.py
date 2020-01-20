@@ -54,7 +54,7 @@ class ProductMoveReport(models.TransientModel):
             domain = [('move_id', 'in', stock_moves.ids), ('product_id', '=', self.product_id.id),
                       ('state', '=', 'done'), '|', ('location_id', '=', self.stock_location_id.id),
                       ('location_dest_id', '=', self.stock_location_id.id)]
-            lines = self.env['stock.move.line'].search(domain)
+            lines = self.env['stock.move.line'].search(domain,order='date desc')
         return lines
 
     @api.multi
