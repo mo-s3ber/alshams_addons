@@ -143,12 +143,12 @@ class StockMove(models.Model):
         #     move.unit_inventory_cost = move.product_id.standard_price
         # return tmp_value
 
-    def _run_valuation(self, quantity=None):
-        super(StockMove, self)._run_valuation(quantity=quantity)
-        if self.force_unit_inventory_cost or self.unit_inventory_cost:
-            self.write({
-                'price_unit': self.force_unit_inventory_cost or self.unit_inventory_cost,
-            })
+    # def _run_valuation(self, quantity=None):
+    #     super(StockMove, self)._run_valuation(quantity=quantity)
+    #     if self.force_unit_inventory_cost !=0 or self.unit_inventory_cost != 0:
+    #         self.write({
+    #             'price_unit': self.force_unit_inventory_cost or self.unit_inventory_cost,
+    #         })
 
     def product_price_update_after_done(self):
         if self.inventory_id:
@@ -274,9 +274,10 @@ class StockMove(models.Model):
 
         if self.purchase_line_id and self.product_id.id == self.purchase_line_id.product_id.id:
             if self.unit_inventory_cost:
-                self.write({
-                    'value': self.unit_inventory_cost * self.quantity_done,
-                })
+                self.value = self.unit_inventory_cost * self.quantity_done
+                # self.write({
+                #     'value': self.unit_inventory_cost * self.quantity_done,
+                # })
 
         inventory = self.env['stock.inventory.line'].search(
             [('inventory_id', '=', self.inventory_id.id), ('product_id', '=', self.product_id.id)])
