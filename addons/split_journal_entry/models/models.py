@@ -275,6 +275,7 @@ class StockMove(models.Model):
         if self.purchase_line_id and self.product_id.id == self.purchase_line_id.product_id.id:
             if self.unit_inventory_cost:
                 self.value = self.unit_inventory_cost * self.quantity_done
+                self.price_unit = self.unit_inventory_cost
                 # self.write({
                 #     'value': self.unit_inventory_cost * self.quantity_done,
                 # })
